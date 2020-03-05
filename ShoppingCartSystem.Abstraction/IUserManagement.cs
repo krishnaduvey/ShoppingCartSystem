@@ -6,10 +6,12 @@ using System.Threading.Tasks;
 using ShoppingCartSystem.Abstraction.Model;
 namespace ShoppingCartSystem.Abstraction
 {
-    interface IUserManagement
+    public interface IUserManagement
     {
         bool UserLogin(string username, string password);
         int UserRegistration(Users user);
+
+        Users AddUser();
 
     }
 }

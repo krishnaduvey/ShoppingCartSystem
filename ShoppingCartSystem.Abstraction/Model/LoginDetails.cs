@@ -13,20 +13,16 @@ namespace ShoppingCartSystem.Abstraction.Model
         private string _message;
 
         public int LoginSessionId
-        {
-            set { this._loginSessionId = value; }
-        }
+        { get; set; }
         public bool LoginStaus
-        {
-            set { this._loginStatus = value; }
-        }
+        { get; set; }
         public string Message
         {
             get
             {
                 if (!_loginStatus)
-                    return "Login Failed.";
-                else return "Login Successfully Done.";
+                    return "User login failed.";
+                else return "Login successful";
             }
         }
 

@@ -49,5 +49,15 @@
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ShoppingCartSystem.Abstraction\ShoppingCartSystem.Abstraction.csproj">
+      <Project>{0a74372b-c016-40bc-88c5-b430d59a17ad}</Project>
+      <Name>ShoppingCartSystem.Abstraction</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ShoppingCartSystem.Core\ShoppingCartSystem.Core.csproj">
+      <Project>{4e0929cb-e735-402c-a30c-d80e0c2112fa}</Project>
+      <Name>ShoppingCartSystem.Core</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

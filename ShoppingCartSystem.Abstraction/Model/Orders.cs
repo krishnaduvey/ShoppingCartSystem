@@ -9,5 +9,6 @@ namespace ShoppingCartSystem.Abstraction.Model
     class Orders
     {
         // product id, userId, productQuantity
+        private int productId;
     }
 }
