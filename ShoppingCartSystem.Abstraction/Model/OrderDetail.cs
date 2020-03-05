@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace ShoppingCartSystem.Abstraction.Model
 {
-    class OrderDetail
+    public class OrderDetail
     {
         //order status, order number, order details
+
     }
 }

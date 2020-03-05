@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace ShoppingCartSystem.Abstraction.Model
 {
-    class Orders
+    public class Orders
     {
         // product id, userId, productQuantity
         private int productId;

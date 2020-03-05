@@ -28,13 +28,8 @@ namespace ShoppingCartSystem.Core
             throw new NotImplementedException();
         }
 
-        public int UserRegistration(Users user)
-        {
-            throw new NotImplementedException();
-        }
 
-
-        public Users AddUser()
+        public Users UserRegistration()
         {
             Console.WriteLine("Enter Name :");
             string name=Console.ReadLine();
@@ -48,8 +43,7 @@ namespace ShoppingCartSystem.Core
             Console.WriteLine("Enter Phone Number :");
             string phonenumber = Console.ReadLine();
 
-
-            users.Add(new Users()
+            var newUser = new Users()
             {
                 UserId = InsertUserId(),
                 Name = name,
@@ -57,9 +51,12 @@ namespace ShoppingCartSystem.Core
                 UserName = username,
                 PhoneNumber = phonenumber,
                 UserRole = Role.User
-            });
-            return null;
+            };
+
+            users.Add(newUser);
+            return newUser;
         }
+
 
         public int InsertUserId()
         {
