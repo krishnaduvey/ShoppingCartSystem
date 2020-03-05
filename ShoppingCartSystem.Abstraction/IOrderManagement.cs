@@ -1,17 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Security.AccessControl;
-using System.Text;
-using System.Threading.Tasks;
-
+﻿
+using ShoppingCartSystem.Abstraction.Model;
 namespace ShoppingCartSystem.Abstraction
 {
     interface IOrderManagement
     {
 
-        int GetOrderDetails(); 
+        OrderDetail GetOrderDetails(int orderId);
+        int CreateOrder(OrderDetail orderDetail); // it will add to Cart and OrderId to show the detail further
+
+
 
 
     }
