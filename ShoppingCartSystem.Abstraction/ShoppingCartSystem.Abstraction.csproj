@@ -46,13 +46,16 @@
     <Compile Include="IOrderManagement.cs" />
     <Compile Include="IProductManagement.cs" />
     <Compile Include="IUserManagement.cs" />
+    <Compile Include="Model\LoginDetails.cs" />
+    <Compile Include="Model\OrderDetail.cs" />
+    <Compile Include="Model\Orders.cs" />
+    <Compile Include="Model\Products.cs" />
+    <Compile Include="Model\Users.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Model\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
