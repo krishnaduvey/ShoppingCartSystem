@@ -9,6 +9,13 @@ namespace ShoppingCartSystem.Abstraction.Model
     public class OrderDetail
     {
         //order status, order number, order details
+        public int OrderId
+        { get; set; }
+        public bool OrderStaus
+        { get; set; }
+        public string OrderDetails
+        { get; set; }
+      
 
     }
 }

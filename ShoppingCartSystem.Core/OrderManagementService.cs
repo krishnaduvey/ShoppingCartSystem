@@ -8,16 +8,12 @@ namespace ShoppingCartSystem.Core
 {
     class OrderManagementService
     {
-        public static List<OrderDetail> users = new List<OrderDetail>()
-        {
-            new OrderDetail()
-            {
-                
-            }
-        };
-        public static void AddToCart()
+        public static Dictionary<int, int> addOrderToCart;
+        public static void AddToCart(OrderDetail order, int userId)
         {
             Dictionary<int, int> addToCart = new Dictionary<int, int>();
+
+             
         }
 
     }

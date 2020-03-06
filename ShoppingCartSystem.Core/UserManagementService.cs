@@ -29,27 +29,17 @@ namespace ShoppingCartSystem.Core
         }
 
 
-        public Users UserRegistration()
+        public Users UserRegistration(Users user, int userId)
         {
-            Console.WriteLine("Enter Name :");
-            string name=Console.ReadLine();
-
-            Console.WriteLine("Enter Password :");
-            string password = Console.ReadLine();
-
-            Console.WriteLine("Enter Username :");
-            string username = Console.ReadLine();
-
-            Console.WriteLine("Enter Phone Number :");
-            string phonenumber = Console.ReadLine();
+           
 
             var newUser = new Users()
             {
                 UserId = InsertUserId(),
-                Name = name,
-                Password = password,
-                UserName = username,
-                PhoneNumber = phonenumber,
+                Name = user.Name,
+                Password = user.Password,
+                UserName = user.UserName,
+                PhoneNumber = user.PhoneNumber,
                 UserRole = Role.User
             };
 
@@ -63,5 +53,22 @@ namespace ShoppingCartSystem.Core
             var lastAddedUser=users.Last();
             return lastAddedUser.UserId+1;
         }
+
+
+        public static Users GetUserRole(int userId)
+        {
+            return users.Where(x => x.UserId == userId).First(); ;
+        }
+
+        public static bool IsUserExists(int userId)
+        {
+            return users.Select(x => x.UserId == userId).First();
+        }
+
+        public static bool IsUserNameExists(string username)
+        {
+            return users.Select(x => x.UserName == username).First();
+        }
+
     }
 }
