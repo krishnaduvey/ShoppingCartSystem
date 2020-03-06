@@ -6,23 +6,14 @@ using System.Threading.Tasks;
 
 namespace ShoppingCartSystem.Abstraction.Model
 {
-    class LoginDetails
-    { 
-        private bool _loginStatus;
-        public int LoginSessionId
-        { get; set; }
+    public class LoginDetails
+    {
         public bool LoginStaus
         { get; set; }
-        public string Message
-        {
-            get
-            {
-                if (!_loginStatus)
-                    return "User login failed.";
-                else return "Login successful";
-            }
-        }
+        public string Message { get; set; }
 
+        public Users User
+        { get; set; }
 
     }
 }

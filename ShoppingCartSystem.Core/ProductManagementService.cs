@@ -31,7 +31,7 @@ namespace ShoppingCartSystem.Core
             }
         }
 
-        public static bool DeleteProduct(int productId)
+        public bool DeleteProduct(int productId)
         {
             try
             {
@@ -50,18 +50,43 @@ namespace ShoppingCartSystem.Core
             }
         }
 
-        public static void AddNewProduct(Products product)
+        public int AddNewProduct(Products product)
         {
+            int productId = 1;
+            if (products.Count > 0)
+            {
+                productId = InsertProductId();
+            }
+           
             products.Add(new Products()
             {
-                ProductId = product.ProductId,
+                ProductId = productId,
                 Name = product.Name,
                 Description = product.Description,
                 Quantity = product.Quantity,
                 Price = product.Price,
             }
             );
+
+            return products.Select(x => x.ProductId).Last();
         }
 
+        public int InsertProductId()
+        {
+            var lastAddedProduct = products.Last();
+            return lastAddedProduct.ProductId + 1;
+        }
+        public void UpdateProductInfo(Products product)
+        {
+            var productToUpdate = products.Where(x => x.ProductId == product.ProductId);
+
+            if (products.Count() > 0)
+            {
+                var toUpdate = productToUpdate.First<Products>();
+
+                products.Remove(toUpdate);
+                products.Add(product);
+            }
+        }
     }
 }

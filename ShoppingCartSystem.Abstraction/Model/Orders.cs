@@ -8,7 +8,7 @@ namespace ShoppingCartSystem.Abstraction.Model
 {
     public class Orders
     {
-        // product id, userId, productQuantity
-        private int productId;
+        // product id, userId, productQuantity, users
+      
     }
 }

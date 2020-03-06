@@ -14,15 +14,6 @@ namespace ShoppingCartSystem.Abstraction.Model
     /// </summary>
     public class Users
     {
-        //userId, name, password, email, username, phoneNo
-
-        /*private int _userId; 
-        private string _name;
-        private string _password;
-        private string _username;
-        private string _phoneNumber;
-        private Role _userRole;*/ //guest, admin, member
-
         public int UserId { get; set; }
 
         public string Name { get; set; }
@@ -34,9 +25,5 @@ namespace ShoppingCartSystem.Abstraction.Model
         public string PhoneNumber { get; set; }
 
         public Role UserRole { get; set; }
-
-
-
-
     }
 }

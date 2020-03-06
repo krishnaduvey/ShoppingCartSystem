@@ -8,8 +8,10 @@ namespace ShoppingCartSystem.Abstraction
 {
     public interface IUserManagement
     {
-        bool UserLogin(string username, string password);
+        LoginDetails Login(string username, string password);
         Users UserRegistration(Users user, int userId);
+
+        bool DeleteUser(int userId);
 
 
     }

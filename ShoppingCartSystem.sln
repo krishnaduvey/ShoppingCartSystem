@@ -5,11 +5,11 @@ VisualStudioVersion = 16.0.29806.167
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShoppingCartSystem.Abstraction", "ShoppingCartSystem.Abstraction\ShoppingCartSystem.Abstraction.csproj", "{0A74372B-C016-40BC-88C5-B430D59A17AD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShoppingCartSystem.Core", "ShoppingCartSystem.Core\ShoppingCartSystem.Core.csproj", "{4E0929CB-E735-402C-A30C-D80E0C2112FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShoppingCartSystem.Core", "ShoppingCartSystem.Core\ShoppingCartSystem.Core.csproj", "{4E0929CB-E735-402C-A30C-D80E0C2112FA}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShoppingCartSystem", "ShoppingCartSystem\ShoppingCartSystem.csproj", "{4B749C0B-9EEF-4118-88C9-5D4958A145B0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ShoppingCartSystem.Test", "ShoppingCartSystem.Test\ShoppingCartSystem.Test.csproj", "{956C7583-D879-4E24-843F-710FD15874C2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ShoppingCartSystem.Test", "ShoppingCartSystem.Test\ShoppingCartSystem.Test.csproj", "{956C7583-D879-4E24-843F-710FD15874C2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

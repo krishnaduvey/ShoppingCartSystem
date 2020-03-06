@@ -23,8 +23,38 @@ namespace ShoppingCartSystem.Core
              }
          };
 
-        public bool UserLogin(string username, string password)
+        public LoginDetails Login(string username, string password)
         {
+            //bool isUser=IsUserExists(username);
+            Users userDetails = GetUserInfo(username);
+
+            if(userDetails==null)
+                return new LoginDetails()
+                {
+                    LoginStaus = false,
+                    Message = "Username does not exist.",
+                    User = userDetails
+                };
+
+            if (username == userDetails.UserName && userDetails.Password == password)
+            {
+                return new LoginDetails()
+                {
+                    LoginStaus=true,
+                    Message= "Login successful",
+                    User = userDetails
+                };
+            }
+            else
+            {
+                return new LoginDetails()
+                {
+                    LoginStaus = false,
+                    Message = "Login password does not matched.",
+                    User = userDetails
+                };
+            }
+
             throw new NotImplementedException();
         }
 
@@ -55,20 +85,51 @@ namespace ShoppingCartSystem.Core
         }
 
 
-        public static Users GetUserRole(int userId)
+        public static Users GetUserInfo(int userId)
         {
             return users.Where(x => x.UserId == userId).First(); ;
         }
 
+        public static Users GetUserInfo(string username)
+        {
+            return users.Where(x => x.UserName == username).FirstOrDefault(); ;
+        }
         public static bool IsUserExists(int userId)
         {
             return users.Select(x => x.UserId == userId).First();
         }
 
-        public static bool IsUserNameExists(string username)
+        public static bool IsUserExists(string username)
         {
             return users.Select(x => x.UserName == username).First();
         }
+
+
+
+        public bool DeleteUser(int userId)
+        {
+            try
+            {
+                if (userId == 1)
+                {
+                    Console.WriteLine("Admin user cann't be deleted.");
+                    return false;
+                }
+                var result = users.Remove(users.Single(x => x.UserId == userId));
+                return result;
+            }
+            catch (ArgumentNullException argumentNull)
+            {
+                Console.WriteLine(argumentNull);
+                return false;
+            }
+            catch (InvalidOperationException invalidOperation)
+            {
+                Console.WriteLine(invalidOperation);
+                return false;
+            }
+        }
+
 
     }
 }
