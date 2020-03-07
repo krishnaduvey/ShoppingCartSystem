@@ -14,17 +14,36 @@ namespace ShoppingCartSystem
     {
          static int userFilterKey;
          static LoginDetails loginInfo;
+         static bool isUserLoggedIn=false;
         static void Main(string[] args)
         {
             // Flow of application :
             // 1. Product Information which is visible to every one.
-            // 2. Buy/ exit app
-            // 3. Login ( Enter username and password ) else click as new user
-            // 4. Registered then show products name price and description 
+            // 2. Hi Guest, Thanks to visit.
+            // 3. Can you please, Give me your few details :
+            // 4. Are you a existing user? (Y/N)
+            // 4.1. N : Do you want to create your account with us?
+            // (Y\N) { N : Please enter 9 to exit and 1 to show products. Y : Go to Registration page after succesfull user registration ask for login.( Wants to login then press 1 else press 9 to exit)}
+            // 4.2. Y : Login ( Enter username and password ) 
+            // 5.  
             // 5. If new user then do registration as per option fill form accodingly and validate it
 
+            // User based action :
+            // Admin : 1. Add, view, update and delete product, All orders
+            // User : Register, Add/ remove product to Cart, Apply order
 
-           
+
+
+
+
+
+
+            do
+            {
+                ShowProducts();
+            } while (AskForLogin());
+
+
             AskForLogin();
 
             #region List of Available Products
@@ -50,6 +69,7 @@ namespace ShoppingCartSystem
                     Name = "item updated"
                 }
                 );
+
             #endregion
             ToDoBeforeLogin();
            
@@ -71,21 +91,56 @@ namespace ShoppingCartSystem
             */
         }
 
-        public static void ToDoBeforeLogin()
+        public static void ShowProducts()
         {
-            ProductManagementService.ProductDetails();
+            new ProductManagementService().ShowAllProducts();
         }
 
-        public static void AskForLogin()
+        public static void AskForUserType()
         {
             Console.WriteLine("Are you a User or Admin?");
             Console.WriteLine("Press 1 for Admin?");
             Console.WriteLine("Press 2 for User?");
-             
+
             while (!InputKeyValidation())
             {
-                Console.WriteLine("Wrong");
+               
             }
+
+
+        }
+
+        public static bool DoYouWantToLoginToTheApplication()
+        {
+            try
+            {
+                Console.WriteLine();
+                Console.WriteLine("Do you want to Login with this application :");
+                Console.WriteLine("Please input Y/N : Y to Continue and N to Exit");
+                char input = Console.ReadKey().KeyChar;
+                var inputChar = Char.ToUpper(input);
+                if (inputChar == 'Y')
+                    return true;
+                else if (inputChar == 'N')
+                    return false;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+
+            return DoYouWantToLoginToTheApplication();
+        }
+
+        public static bool AskForLogin()
+        {
+            Console.WriteLine("");
+
+            Console.WriteLine("Are you a User or Admin?");
+            Console.WriteLine("Press 1 for Admin?");
+            Console.WriteLine("Press 2 for User?");
+             
+            
 
             if (userFilterKey == 1 || userFilterKey == 2)
             {
@@ -223,6 +278,17 @@ namespace ShoppingCartSystem
             }
 
         }
+
+        public static void ActionOfAdminUser()
+        {
+            string[] actions = {"Login", "Add","View","UpdateDetails","Delete","CheckAllOrders"};
+        }
+
+        public static void ActionOfGuestUser()
+        {
+            string[] actions = { "Login", "Registeration", "ViewProducts","ViewProductsInCart","AddToCart", "DeleteToCart", "ApplyOrder","CheckOrderStatus" };
+        }
+
     }
 }
 

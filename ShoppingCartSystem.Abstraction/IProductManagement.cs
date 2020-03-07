@@ -15,6 +15,7 @@ namespace ShoppingCartSystem.Abstraction
         bool DeleteProduct(int product, int quantity);
         bool UpdateProduct(Products product);
 
+        List<Products> ShowAllProducts();
 
     }
 }

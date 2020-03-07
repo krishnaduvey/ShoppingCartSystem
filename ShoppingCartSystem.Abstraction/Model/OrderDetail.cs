@@ -26,5 +26,10 @@ namespace ShoppingCartSystem.Abstraction.Model
         { get;
           set;
         }
+        public Products Product
+        {
+            get;
+            set;
+        }
     }
 }

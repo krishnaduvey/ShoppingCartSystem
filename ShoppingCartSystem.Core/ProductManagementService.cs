@@ -15,7 +15,7 @@ namespace ShoppingCartSystem.Core
 
         public static List<Products> products = new List<Products>();
 
-        public static void ProductDetails()
+        public List<Products> ShowAllProducts()
         {
             if (products.Count > 0)
             {
@@ -29,6 +29,8 @@ namespace ShoppingCartSystem.Core
             {
                 Console.WriteLine("No stock available.");
             }
+
+            return products;
         }
 
         public bool DeleteProduct(int productId)
