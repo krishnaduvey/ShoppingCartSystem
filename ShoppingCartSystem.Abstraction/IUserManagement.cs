@@ -9,7 +9,7 @@ namespace ShoppingCartSystem.Abstraction
     public interface IUserManagement
     {
         LoginDetails Login(string username, string password);
-        Users UserRegistration(Users user, int userId);
+        Users UserRegistration(Users user);
 
         bool DeleteUser(int userId);
 

@@ -59,10 +59,8 @@ namespace ShoppingCartSystem.Core
         }
 
 
-        public Users UserRegistration(Users user, int userId)
+        public Users UserRegistration(Users user)
         {
-           
-
             var newUser = new Users()
             {
                 UserId = InsertUserId(),
@@ -70,7 +68,7 @@ namespace ShoppingCartSystem.Core
                 Password = user.Password,
                 UserName = user.UserName,
                 PhoneNumber = user.PhoneNumber,
-                UserRole = Role.User
+                UserRole = user.UserRole
             };
 
             users.Add(newUser);

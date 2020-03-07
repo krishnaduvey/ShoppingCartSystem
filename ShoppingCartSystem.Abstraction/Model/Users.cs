@@ -5,8 +5,8 @@ namespace ShoppingCartSystem.Abstraction.Model
     // Role enum helps us to restrict during registration  user and authorization handling means what will going to authorize to which role.
     public enum Role
     {
-        Admin = 1,
-        User = 2
+        Admin,
+        User
     }
 
     /// <summary>
@@ -24,6 +24,6 @@ namespace ShoppingCartSystem.Abstraction.Model
 
         public string PhoneNumber { get; set; }
 
-        public Role UserRole { get; set; }
+        public Role? UserRole { get; set; }
     }
 }
