@@ -8,8 +8,8 @@ namespace ShoppingCartSystem.Abstraction.Model
 {
     public enum OrderStatus
     {
-        InProcess=1,
-        InCart=2
+        InProcess,
+        Delivered
     }
 
     public class OrderDetail
@@ -19,10 +19,8 @@ namespace ShoppingCartSystem.Abstraction.Model
         { get; set; }
         public OrderStatus OrderStaus
         { get; set; }
-        public string OrderDetails
-        { get; set; }
 
-        public Users User
+        public int UserId
         { get;
           set;
         }

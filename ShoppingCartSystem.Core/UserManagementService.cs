@@ -10,15 +10,15 @@ namespace ShoppingCartSystem.Core
 {
     public class UserManagementService : IUserManagement
     {
-         public static List<Users> users= new List<Users>()
+        public static List<Users> users = new List<Users>()
          {
              new Users()
              {
-               UserId =1, 
-               Name="Administrator", 
+               UserId =1,
+               Name="Administrator",
                Password="admin",
-               UserName="admin", 
-               PhoneNumber= "8909910092", 
+               UserName="admin",
+               PhoneNumber= "8909910092",
                UserRole=Role.Admin
              }
          };
@@ -28,7 +28,7 @@ namespace ShoppingCartSystem.Core
             //bool isUser=IsUserExists(username);
             Users userDetails = GetUserInfo(username);
 
-            if(userDetails==null)
+            if (userDetails == null)
                 return new LoginDetails()
                 {
                     LoginStaus = false,
@@ -40,8 +40,8 @@ namespace ShoppingCartSystem.Core
             {
                 return new LoginDetails()
                 {
-                    LoginStaus=true,
-                    Message= "Login successful",
+                    LoginStaus = true,
+                    Message = "Login successful",
                     User = userDetails
                 };
             }
@@ -78,8 +78,8 @@ namespace ShoppingCartSystem.Core
 
         public int InsertUserId()
         {
-            var lastAddedUser=users.Last();
-            return lastAddedUser.UserId+1;
+            var lastAddedUser = users.Last();
+            return lastAddedUser.UserId + 1;
         }
 
 
@@ -90,6 +90,7 @@ namespace ShoppingCartSystem.Core
 
         public static Users GetUserInfo(string username)
         {
+
             return users.Where(x => x.UserName == username).FirstOrDefault(); ;
         }
         public static bool IsUserExists(int userId)
@@ -129,5 +130,26 @@ namespace ShoppingCartSystem.Core
         }
 
 
+        public static Dictionary<string, int> ActionOfAdminUser()
+        {
+            string[] actions = { "AddProduct", "View", "UpdateDetails", "Delete", "CheckAllOrders" };
+            Dictionary<string, int> adminActions = new Dictionary<string, int>();
+            for (int i = 1; i <= actions.Length; i++)
+            {
+                adminActions.Add(actions[i], i);
+            }
+
+            return adminActions;
+        }
+
+        public static void ActionOfGuestUser()
+        {
+            string[] actions = { "ViewProducts", "ViewProductsInCart", "AddToCart", "DeleteToCart", "ApplyOrder", "CheckOrderStatus" };
+            Dictionary<string, int> userActions = new Dictionary<string, int>();
+            for (int i = 1; i <= actions.Length; i++)
+            {
+                userActions.Add(actions[i], i);
+            }
+        }
     }
 }

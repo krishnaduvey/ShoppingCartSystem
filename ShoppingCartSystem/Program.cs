@@ -17,85 +17,137 @@ namespace ShoppingCartSystem
         private static bool isUserLoggedIn = false;
         private static Role? userType;
 
+      /*  public static void AdminOperationExecuter(int i) {
 
+            switch (i) {
+                case 1:
+
+
+            }
+
+        }*/
 
         public static void ActionListAsPerRole(Role? role)
         {
             if (role.ToString() == "Admin")
             {
-                Console.WriteLine("Check below list of actions that \"Admin\" can perform.");
+                Console.WriteLine("Check below list of actions that \"" + role.ToString() + "\" can perform.");
                 Console.WriteLine("Enter number to perform operation :");
-                Console.WriteLine("[1] To View Products");
-                Console.WriteLine("[2] To Add New Product");
-                Console.WriteLine("[3] To Update Product");
-                Console.WriteLine("[4] To Delete Product");
-                Console.WriteLine("[5] To Check all Orders");
-                Console.WriteLine("[6] To Remove user.");
-                Console.WriteLine("[7] To All Users information.");
+                Console.WriteLine("[1] To View Products");// productservice
+                Console.WriteLine("[2] To Add New Product");// productservice
+                Console.WriteLine("[3] To Update Product");// productservice
+                Console.WriteLine("[4] To Delete Product");// productservice
+                Console.WriteLine("[5] To Check all Orders");// orderservice
+                Console.WriteLine("[6] To Remove user.");// userservice
+                Console.WriteLine("[7] To All Users information.");//userservice
             }
             else if (role.ToString() == "User")
             {
-                Console.WriteLine("Check below list of actions that \"Admin\" can perform.");
+                Console.WriteLine("Check below list of actions that \"" + role.ToString() + "\" can perform.");
                 Console.WriteLine("Enter number to perform operation :");
-                Console.WriteLine("[1] To View Products");
-                Console.WriteLine("[2] To Add Product To Cart");
-                Console.WriteLine("[3] To View Product in Cart");
-                Console.WriteLine("[4] To Delete Product from Cart");
-                Console.WriteLine("[5] To Check Product availablity on application");
-                Console.WriteLine("[6] To Remove Product from cart");
-                Console.WriteLine("[7] To Buy Order");
-                Console.WriteLine("[8] To Cancel Order");
+                Console.WriteLine("[1] To View Products");//productservice
+                Console.WriteLine("[2] To Add Product To Cart");//orderservice
+                Console.WriteLine("[3] To View Product in Cart");//orderservice
+                Console.WriteLine("[4] To Delete Product from Cart");//orderservice
+                Console.WriteLine("[5] To Buy Order");//orderservice
+                Console.WriteLine("[6] To Cancel Order");//orderservice
             }
         }
 
         static void Main(string[] args)
         {
 
+            //1.
+            AddNewProducts();
+            AddNewProducts();
+            AddNewProducts();
+
+            Console.WriteLine(ProductManagementService.GetProductQuantity(1));
+            Console.WriteLine(ProductManagementService.GetProductQuantity(2));
+            Console.WriteLine(ProductManagementService.GetProductQuantity(3));
+
+
+            //2. Add products to cart
+            OrderManagementService.AddProductToCart(1,122,1);
+            OrderManagementService.AddProductToCart(2, 11, 1);
+            OrderManagementService.AddProductToCart(2, 111, 1);
+            OrderManagementService.AddProductToCart(2, 11, 1);
+            OrderManagementService.AddProductToCart(3, 11, 1);
+
+
+            //3. View Cart
+            OrderManagementService.ViewCart(1);
+
+            // 4.  remove from cart
+            OrderManagementService.RemoveFromCart(2, 1);
+
+            new ProductManagementService().GetAllAvailableProducts();
+            // 5. buynow
+            OrderManagementService.ApplyOrder(1);
+
+            //6. Check all orders
+            OrderManagementService.CheckOrderStatus();
+            new ProductManagementService().GetAllAvailableProducts();
+
+            Console.WriteLine(ProductManagementService.GetProductQuantity(1));
+            Console.WriteLine(ProductManagementService.GetProductQuantity(2));
+            Console.WriteLine(ProductManagementService.GetProductQuantity(3));
+
+
+
+            Console.WriteLine("End of the Service test..............................");
+            Console.ReadKey();
+
         Start:
-          /*  do
+            /*  do
+              {
+             */
+            do
             {
-           */
+                userType = AskForUserType();
+
+            } while (userType == null);
+
+            do
+            {
+                bool isUserWantToLogin;
                 do
                 {
-                    userType = AskForUserType();
-
-                } while (userType == null);
-
-                do
-                {
-                    bool isUserWantToLogin;
-                    do
+                    isUserWantToLogin = DoYouWantToLoginToTheApplication(userType);
+                    if (!isUserWantToLogin)
                     {
-                        isUserWantToLogin = DoYouWantToLoginToTheApplication(userType);
-                        if (!isUserWantToLogin)
-                        {
-                            ShowProducts();
-                        }
+                        ShowProducts();
+                    }
+                    else
+                    {
+                        if (DoYouHaveAnAccount())
+                            isUserLoggedIn = LoginToApplication();
                         else
                         {
-                            if (DoYouHaveAnAccount())
-                                isUserLoggedIn=LoginToApplication();
-                            else {                                
-                                int userId=CreateNewUser();
-                                isUserLoggedIn = LoginToApplication();
-                            }
-
+                            int userId = CreateNewUser();
+                            isUserLoggedIn = LoginToApplication();
                         }
-                    } while (!isUserWantToLogin);
+
+                    }
+                } while (!isUserWantToLogin);
 
 
-                } while (!loginInfo.LoginStaus);
+            } while (!loginInfo.LoginStaus);
             //} while (!isUserLoggedIn);
 
 
             while (isUserLoggedIn)
             {
+
                 ShowProducts();
+                Console.WriteLine();
+                
+                
                 ActionListAsPerRole(loginInfo.User.UserRole);
                 Console.ReadLine();
             }
 
-                goto Start;
+            goto Start;
 
 
 
@@ -129,19 +181,13 @@ namespace ShoppingCartSystem
             #endregion
             //ToDoBeforeLogin();
 
-
-
-            Console.WriteLine("Are you a New User? :Press 1");
-            Console.WriteLine("Are you already Registered ? :Press 2");
-            Console.WriteLine("Press 1");
-
             Console.ReadKey();
 
         }
 
         public static void ShowProducts()
         {
-            new ProductManagementService().ShowAllProducts();
+            new ProductManagementService().GetAllAvailableProducts();
         }
 
         public static Role? GetUserType(char input)
@@ -204,7 +250,7 @@ namespace ShoppingCartSystem
 
         public static int CreateNewUser()
         {
-            Users user=AddUser();
+            Users user = AddUser();
             return user.UserId;
         }
 
@@ -285,19 +331,22 @@ namespace ShoppingCartSystem
 
         }
 
-        public static Role addRoleToUser() {
+        public static Role addRoleToUser()
+        {
             Console.WriteLine("Enter 1 for Admin and 2 For User role");
 
             int roleValue = 0;
             int.TryParse(Console.ReadLine(), out roleValue);
             Console.WriteLine();
 
-            if ((roleValue - 1) < 0 || (roleValue - 1) > 1) {
+            if ((roleValue - 1) < 0 || (roleValue - 1) > 1)
+            {
                 Console.WriteLine("Try with valid input.");
                 addRoleToUser();
             }
 
-            if ((roleValue - 1) == 0 && (userType.ToString()=="User")) {
+            if ((roleValue - 1) == 0 && (userType.ToString() == "User"))
+            {
                 Console.WriteLine("You dont have permission to create admin user. Please select valid role:");
                 addRoleToUser();
             }
@@ -343,8 +392,9 @@ namespace ShoppingCartSystem
             int price;
             int quantity;
 
+            Console.WriteLine("Enter Price of product :");
             price = ValidateInputPrice(out price);
-
+            Console.WriteLine("Enter Quantity of product :");
             quantity = ValidateInputPrice(out quantity);
 
             var newProduct = new Products()
@@ -361,8 +411,7 @@ namespace ShoppingCartSystem
         {
             string userInput;
             do
-            {
-                Console.Write(string.Format("Enter input : #{0}: ", 1));
+            {               
                 userInput = Console.ReadLine();
             } while (!int.TryParse(userInput, out input));
             return input;
@@ -411,15 +460,6 @@ namespace ShoppingCartSystem
 
         }
 
-        public static void ActionOfAdminUser()
-        {
-            string[] actions = { "Login", "Add", "View", "UpdateDetails", "Delete", "CheckAllOrders" };
-        }
-
-        public static void ActionOfGuestUser()
-        {
-            string[] actions = { "Login", "Registeration", "ViewProducts", "ViewProductsInCart", "AddToCart", "DeleteToCart", "ApplyOrder", "CheckOrderStatus" };
-        }
 
     }
 }
