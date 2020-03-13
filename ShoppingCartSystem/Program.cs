@@ -16,6 +16,7 @@ namespace ShoppingCartSystem
         private static LoginDetails loginInfo;
         private static bool isUserLoggedIn = false;
         private static Role? userType;
+        private static bool isAdded = false;
 
       /*  public static void AdminOperationExecuter(int i) {
 
@@ -57,46 +58,7 @@ namespace ShoppingCartSystem
         static void Main(string[] args)
         {
 
-            //1.
-            AddNewProducts();
-            AddNewProducts();
-            AddNewProducts();
-
-            Console.WriteLine(ProductManagementService.GetProductQuantity(1));
-            Console.WriteLine(ProductManagementService.GetProductQuantity(2));
-            Console.WriteLine(ProductManagementService.GetProductQuantity(3));
-
-
-            //2. Add products to cart
-            OrderManagementService.AddProductToCart(1,122,1);
-            OrderManagementService.AddProductToCart(2, 11, 1);
-            OrderManagementService.AddProductToCart(2, 111, 1);
-            OrderManagementService.AddProductToCart(2, 11, 1);
-            OrderManagementService.AddProductToCart(3, 11, 1);
-
-
-            //3. View Cart
-            OrderManagementService.ViewCart(1);
-
-            // 4.  remove from cart
-            OrderManagementService.RemoveFromCart(2, 1);
-
-            new ProductManagementService().GetAllAvailableProducts();
-            // 5. buynow
-            OrderManagementService.ApplyOrder(1);
-
-            //6. Check all orders
-            OrderManagementService.CheckOrderStatus();
-            new ProductManagementService().GetAllAvailableProducts();
-
-            Console.WriteLine(ProductManagementService.GetProductQuantity(1));
-            Console.WriteLine(ProductManagementService.GetProductQuantity(2));
-            Console.WriteLine(ProductManagementService.GetProductQuantity(3));
-
-
-
-            Console.WriteLine("End of the Service test..............................");
-            Console.ReadKey();
+            FunctionalTest();
 
         Start:
             /*  do
@@ -460,6 +422,177 @@ namespace ShoppingCartSystem
 
         }
 
+
+        public static void FunctionalTest() {
+            //.. create new user
+            CreateUser("kk01", "kk1", "kk111", "9876543234");
+            CreateUser("kk02", "kk2", "kk112", "9876543234");
+            CreateUser("kk03", "kk3", "kk113", "9876543234");
+
+
+            //1.Adding new products to the app
+            try {
+                var userInfo = UserManagementService.GetUserInfo(1);
+                if (userInfo.UserRole.ToString() == "Admin")
+                {
+                    AddProduct("item01", "this is item1", 30, 34);
+                    AddProduct("item02", "this is item2", 30, 34);
+                    AddProduct("item03", "this is item3", 30, 34);
+                    AddProduct("item04", "this is item4", 30, 34);
+                }
+                else {
+                    Console.WriteLine("403 forbidden error");
+                }
+            }
+            catch (Exception ex) {
+                Console.WriteLine(ex.Message);
+            }
+
+
+            //2. check quantity of all product
+            try
+            {
+            Console.WriteLine("Product Quantity :");
+            Console.WriteLine(ProductManagementService.GetProductQuantity(1));
+            Console.WriteLine(ProductManagementService.GetProductQuantity(2));
+            Console.WriteLine(ProductManagementService.GetProductQuantity(3));
+        }
+            catch (Exception ex) {
+                Console.WriteLine(ex.Message);
+            }
+
+            var cartData=new OrderManagementService().ViewProductsInCart(1);
+            cartData =new OrderManagementService().ViewProductsInCart(2);
+
+            //3. Add product to cart
+            AddToCartTest();
+
+            //4. View Cart
+            var x=new OrderManagementService().ViewProductsInCart(1);
+            var y = new OrderManagementService().ViewProductsInCart(2);
+            var z = new OrderManagementService().ViewProductsInCart(3);
+
+
+            new ProductManagementService().GetAllAvailableProducts();
+            // 4.  remove from cart
+            new OrderManagementService().RemoveProductFromCart(2, 2);
+            new OrderManagementService().RemoveProductFromCart(1, 1);
+            new OrderManagementService().RemoveProductFromCart(2, 2);
+            new OrderManagementService().RemoveProductFromCart(3, 2);
+
+
+
+            // 5. buynow
+            new ProductManagementService().GetAllAvailableProducts();
+            new OrderManagementService().ViewProductsInCart(2);
+            new OrderManagementService().ApplyOrder(2);
+            Console.WriteLine(ProductManagementService.GetProductQuantity(1));
+            Console.WriteLine(ProductManagementService.GetProductQuantity(2));
+            Console.WriteLine(ProductManagementService.GetProductQuantity(3));
+            new OrderManagementService().ViewAllOrders(2);
+
+            new ProductManagementService().GetAllAvailableProducts();
+
+
+            new OrderManagementService().ViewProductsInCart(1);
+            new OrderManagementService().ApplyOrder(1);
+
+            
+
+            new OrderManagementService().ViewAllOrders(1);
+            new ProductManagementService().GetAllAvailableProducts();
+
+            //6. Check all orders
+            Console.WriteLine(new OrderManagementService().GetOrderStatus(1));
+            Console.WriteLine(new OrderManagementService().GetOrderStatus(2));
+
+            Console.WriteLine(ProductManagementService.GetProductQuantity(1));
+            Console.WriteLine(ProductManagementService.GetProductQuantity(2));
+            Console.WriteLine(ProductManagementService.GetProductQuantity(3));
+            var ordersInfo=new OrderManagementService().GetOrderDetailsOfUser(2);
+
+
+
+            Console.WriteLine("End of the Service test..............................");
+            Console.ReadKey();
+
+        }
+
+
+        public static void CreateUser(string name, string password, string username, string phonenumber) {
+            var newUser = new Users()
+            {
+                Name = name,
+                Password = password,
+                UserName = username,
+                PhoneNumber = phonenumber,
+                UserRole = addRoleToUser()
+
+            };
+             new UserManagementService().UserRegistration(newUser);
+        }
+
+        public static void AddProduct(string name, string description, int quantity, decimal price) {
+            var newProduct = new Products()
+            {
+                Name = name,
+                Description = description,
+                Quantity = quantity,
+                Price = price,
+            };
+             new ProductManagementService().AddNewProduct(newProduct);
+        }
+        public static void AddToCartTest() {
+          
+            isAdded = new OrderManagementService().AddProductToCart(new Products()
+            {
+                Quantity = 20,
+                ProductId = 1,
+                Price=ProductManagementService.GetProductPrice(1)
+
+            }, 1);
+            
+            isAdded = new OrderManagementService().AddProductToCart(new Products()
+            {
+                Quantity = 20,
+                ProductId = 4,
+                Price = ProductManagementService.GetProductPrice(1)
+            }, 3);
+            isAdded = new OrderManagementService().AddProductToCart(new Products()
+            {
+                Quantity = 20,
+                ProductId = 2,
+                Price = ProductManagementService.GetProductPrice(1)
+
+            }, 1);
+            isAdded = new OrderManagementService().AddProductToCart(new Products()
+            {
+                Quantity = 20,
+                ProductId = 3,
+                Price = ProductManagementService.GetProductPrice(1)
+
+            }, 2);
+            isAdded = new OrderManagementService().AddProductToCart(new Products()
+            {
+                Quantity = 20,
+                ProductId = 1,
+                Price = ProductManagementService.GetProductPrice(1)
+
+            }, 2);
+            try
+            {
+                isAdded = new OrderManagementService().AddProductToCart(new Products()
+                {
+                    Quantity = 20,
+                    ProductId = 5,
+                    Price = ProductManagementService.GetProductPrice(1)
+
+                }, 2);
+            }
+            catch (Exception ex) { Console.WriteLine(ex.Message); }
+
+
+        }
 
     }
 }

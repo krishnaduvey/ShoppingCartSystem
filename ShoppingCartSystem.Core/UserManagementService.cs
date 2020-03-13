@@ -85,7 +85,7 @@ namespace ShoppingCartSystem.Core
 
         public static Users GetUserInfo(int userId)
         {
-            return users.Where(x => x.UserId == userId).First(); ;
+            return users.Where(x => x.UserId == userId).First(); 
         }
 
         public static Users GetUserInfo(string username)

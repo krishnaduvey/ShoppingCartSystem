@@ -17,7 +17,7 @@ namespace ShoppingCartSystem.Abstraction.Model
         //order status, order number, order details
         public int OrderId
         { get; set; }
-        public OrderStatus OrderStaus
+        public OrderStatus Status
         { get; set; }
 
         public int UserId

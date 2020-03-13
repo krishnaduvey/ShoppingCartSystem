@@ -9,7 +9,7 @@ namespace ShoppingCartSystem.Abstraction
 
         OrderDetail GetOrderDetails(int userId);
         
-        int ApplyOrder(int userId); // it will add to Cart and OrderId to show the detail further
+        bool ApplyOrder(int userId); // it will add to Cart and OrderId to show the detail further
 
         bool CancelOrder(int OrderId,int userId);
 
@@ -21,5 +21,6 @@ namespace ShoppingCartSystem.Abstraction
 
         string GetOrderStatus(int orderId);
 
+        List<OrderDetail> ViewAllOrders(int userId);
     }
 }

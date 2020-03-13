@@ -6,6 +6,11 @@ using System.Threading.Tasks;
 
 namespace ShoppingCartSystem.Abstraction.Model
 {
+    public enum ProductAvailablityStatus
+    {
+        InStock,
+        OutOfStock
+    }
     public class Products
     {
         //product name, product id, product description, quantity, price
@@ -18,5 +23,7 @@ namespace ShoppingCartSystem.Abstraction.Model
         public int Quantity { get; set; }
 
         public decimal Price { get; set; }
+
+        public ProductAvailablityStatus ProductStatus {  get; set; }
     }
 }

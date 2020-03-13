@@ -111,9 +111,12 @@ namespace ShoppingCartSystem.Core
             }
         }
 
-        public static void UpdateProductsDetailAfterBuying(Products product) {
-            var prodDetail=products.Find(x => x.ProductId == product.ProductId);            
-            products.Select(c => { c.Quantity = (c.Quantity-product.Quantity); return c; }).ToList();
+        public static void UpdateProductsDetailAfterBuying(Products product)
+        {
+
+            var prodDetail = products.Find(x => x.ProductId == product.ProductId);
+            products.Select(c => { c.Quantity = (c.Quantity - product.Quantity); return c; }).ToList();
+
         }
 
 
@@ -124,8 +127,9 @@ namespace ShoppingCartSystem.Core
         }
 
 
-        public static int GetProductQuantity(int productId) {
-            var productAvailableQuantity = products.Where(x=>x.ProductId==productId).Select(x => x.Quantity).First();
+        public static int GetProductQuantity(int productId)
+        {
+            var productAvailableQuantity = products.Where(x => x.ProductId == productId).Select(x => x.Quantity).First();
             return productAvailableQuantity;
         }
 
