@@ -160,13 +160,13 @@ namespace ShoppingCartSystem.Core
             var productsInCart = GetProductListFromCart(userId);
             if (productsInCart != null)
             {
-                var isProductInStock = isAllCartProductInOfStock(userId);
+                var isProductInStock = isAllCartProductInStock(userId);
                 var outOfStock = GetOutOfStockProducts(userId);
                 if (isProductInStock)
                 {
                     foreach (var product in productsInCart)
                     {
-                        ProductManagementService.UpdateProductsDetailAfterBuying(product.Product);
+                        ProductManagementService.UpdateProductsDetailAfterOrder(product.Product);
                         newOrderId = CreateOrder(product.Product, userId);
                     }
                     Console.WriteLine("Applied Successfully.");
@@ -188,9 +188,9 @@ namespace ShoppingCartSystem.Core
             }        
         }
 
-        private bool isAllCartProductInOfStock(int userId) {
+        private bool isAllCartProductInStock(int userId) {
             var productsInCart = GetProductListFromCart(userId);
-            var productQuant = productsInCart.All(x => x.Product.Quantity > ProductManagementService.GetProductQuantity(x.Product.ProductId));
+            var productQuant = productsInCart.All(x => x.Product.Quantity < ProductManagementService.GetProductQuantity(x.Product.ProductId));
             return productQuant;
         }
 

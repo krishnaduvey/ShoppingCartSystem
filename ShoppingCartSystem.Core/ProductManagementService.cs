@@ -111,7 +111,7 @@ namespace ShoppingCartSystem.Core
             }
         }
 
-        public static void UpdateProductsDetailAfterBuying(Products product)
+        public static void UpdateProductsDetailAfterOrder(Products product)
         {
 
             var prodDetail = products.Find(x => x.ProductId == product.ProductId);

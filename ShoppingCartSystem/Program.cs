@@ -58,7 +58,7 @@ namespace ShoppingCartSystem
         static void Main(string[] args)
         {
 
-            FunctionalTest();
+            //FunctionalTest();
 
         Start:
             /*  do
@@ -246,6 +246,7 @@ namespace ShoppingCartSystem
         public static bool LoginToApplication()
         {
             Console.WriteLine();
+            Console.WriteLine("Login to Application :");
             Console.WriteLine("Enter username :");
             string username = Console.ReadLine();
             Console.WriteLine("Enter password :");
@@ -253,7 +254,11 @@ namespace ShoppingCartSystem
             loginInfo = new UserManagementService().Login(username, password);
             if (loginInfo.LoginStaus)
             {
-                Console.WriteLine("Welcome Mr. {0}", loginInfo.User.Name);
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine("-------------------------------------");
+                Console.WriteLine("Welcome Mr. {0}", loginInfo.User.Name); 
+                Console.WriteLine("-------------------------------------");
             }
             else
             {
