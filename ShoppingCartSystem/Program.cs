@@ -30,15 +30,17 @@ namespace ShoppingCartSystem
             {
                 userType = AskForUserType();
             } while (userType == null);
+
+
             do
             {
-                bool isUserWantToLogin;
+                bool isUserWantToLogin=false;
                 do
                 {
                     isUserWantToLogin = DoYouWantToLoginToTheApplication(userType);
                     if (!isUserWantToLogin)
                     {
-                        ShowProducts();
+                        Environment.Exit(0);
                     }
                     else
                     {
@@ -57,20 +59,16 @@ namespace ShoppingCartSystem
             } while (!loginInfo.LoginStaus);
             //} while (!isUserLoggedIn);
 
-
-            while (isUserLoggedIn)
-            {
-
+            if (isUserLoggedIn) {
                 ShowProducts();
                 Console.WriteLine();
 
                 ActionsToBePerform();
                 Console.WriteLine();
-                
-                isUserLoggedIn=PerformAction();
-
-
-               
+            }
+            while (isUserLoggedIn)
+            {                
+                isUserLoggedIn=PerformAction();               
             }
 
             goto Start;
@@ -283,6 +281,7 @@ namespace ShoppingCartSystem
 
         public static bool PerformAction() 
         {
+
             bool isUserWantToLogout = false;
             if (loginInfo.User.UserRole.ToString() == "Admin")
             {
@@ -294,6 +293,7 @@ namespace ShoppingCartSystem
                 Console.WriteLine("Input action number :");
                 isUserWantToLogout=UserActions(EnterNumber());
             }
+            isUserWantToLogout=DoYouWantToContinue();
             return isUserWantToLogout;
        }
 
@@ -486,6 +486,33 @@ namespace ShoppingCartSystem
             return user.UserId;
         }
 
+        public static bool DoYouWantToContinue()
+        {
+            try
+            {
+                Console.WriteLine();
+                Console.WriteLine("Do you want to continue with us :");
+                Console.WriteLine("Please input Y/N : Y to Continue and N to Logout");
+                char input = Console.ReadKey().KeyChar;
+                Console.WriteLine();
+                var inputChar = Char.ToUpper(input);
+                if (inputChar == 'Y')
+                {
+                    return true;
+                }
+                else if (inputChar == 'N')
+                {
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Please provide valid input... and try again");
+            }
+            return DoYouWantToContinue();
+
+        }
+
         public static bool DoYouWantToLoginToTheApplication(Role? userType)
         {
             try
@@ -493,7 +520,7 @@ namespace ShoppingCartSystem
                 Console.WriteLine();
                 Console.WriteLine("Hi {0},", userType.ToString());
                 Console.WriteLine("Do you want to Login Or Register with us :");
-                Console.WriteLine("Please input Y/N : Y to Continue and N to exit application.");
+                Console.WriteLine("Please input Y/N : Y to Continue and N to Exit");
                 char input = Console.ReadKey().KeyChar;
                 Console.WriteLine();
                 var inputChar = Char.ToUpper(input);
@@ -501,8 +528,7 @@ namespace ShoppingCartSystem
                     return true;
                 else if (inputChar == 'N')
                 {
-                    //Environment.Exit(0);
-                    return false;
+                    Environment.Exit(0);                    
                 }
             }
             catch (Exception ex)
