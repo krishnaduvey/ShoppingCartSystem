@@ -16,8 +16,6 @@ namespace ShoppingCartSystem
         private static LoginDetails loginInfo;
         private static bool isUserLoggedIn = false;
         private static Role? userType;
-        private static bool isAdded = false;
-        private static Dictionary<string, int> userAction = new Dictionary<string, int>();
 
 
         static void Main(string[] args)
@@ -44,8 +42,9 @@ namespace ShoppingCartSystem
                     }
                     else
                     {
-                        if (DoYouHaveAnAccount())
+                        if (DoYouHaveAnAccount()) {
                             isUserLoggedIn = LoginToApplication();
+                        }
                         else
                         {
                             int userId = CreateNewUser();
@@ -75,13 +74,41 @@ namespace ShoppingCartSystem
 
         }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         public static int EnterNumber()
         {
             string input = Console.ReadLine();
             int num = -1;
             if (!int.TryParse(input, out num))
             {
-                Console.WriteLine("Please input valide number...\n");
+                Console.WriteLine("Please input valid number...\n");
                 EnterNumber();
             }
             else
@@ -92,6 +119,21 @@ namespace ShoppingCartSystem
         }
 
 
+        public static int EnterDigit()
+        {
+            string input = Console.ReadKey().KeyChar+"";
+            int num = -1;
+            if (!int.TryParse(input, out num))
+            {
+                Console.WriteLine("Please input valid number...\n");               
+            }
+            else
+            {
+                return num;
+            }
+            return EnterDigit();
+        }
+
         public static void ShowAllOrders()
         {           
             new OrderManagementService().ViewAllOrders(loginInfo.User.UserId);
@@ -99,7 +141,7 @@ namespace ShoppingCartSystem
 
         public static void ShowAllUsers() {
             Console.WriteLine("-------------------------------------");
-            Console.WriteLine("|\t\tRegistered User :");
+            Console.WriteLine("|\t\tRegistered User :\t\t|");
             Console.WriteLine("-------------------------------------");
             var users=UserManagementService.users;
             foreach (var user in users) {
@@ -110,7 +152,7 @@ namespace ShoppingCartSystem
         public static Users AddNewUser()
         {
             Console.WriteLine("-------------------------------------");
-            Console.WriteLine("|\t\tUser Registration : ");
+            Console.WriteLine("|\t\tUser Registration :\t\t|");
             Console.WriteLine("-------------------------------------");
 
             Console.WriteLine("Enter Name :");
@@ -144,7 +186,7 @@ namespace ShoppingCartSystem
             int price, quantity;
 
             Console.WriteLine("-------------------------------------");
-            Console.WriteLine("|\t\tAdd Product : |");
+            Console.WriteLine("|\t\tAdd Product :\t\t|");
             Console.WriteLine("-------------------------------------");
 
             Console.WriteLine("Enter Product Name :");
@@ -227,24 +269,27 @@ namespace ShoppingCartSystem
 
         public static void AddProductToCart()
         {
-
-            Console.WriteLine("-------------------------------------");
-            Console.WriteLine("|\t\tAdd Product To Cart : ");
-            Console.WriteLine("-------------------------------------");
-
-            Console.WriteLine("Enter Product ID :");
-            string productIdInString = Console.ReadLine();
-            int productId = int.Parse(productIdInString);
-
-
-            
-
-            var productToAdd = new Products()
+            try
             {
-                ProductId= productId,
-                Quantity= provideValidQuantity(productId)
-            };
-            new OrderManagementService().AddProductToCart(new Products(),0);
+                Console.WriteLine("-------------------------------------");
+                Console.WriteLine("|\t\tAdd Product To Cart : ");
+                Console.WriteLine("-------------------------------------");
+
+                Console.WriteLine("Enter Product ID :");
+                string productIdInString = Console.ReadLine();
+                int productId = int.Parse(productIdInString);
+                var productToAdd = new Products()
+                {
+                    ProductId = productId,
+                    Quantity = provideValidQuantity(productId)
+                };
+                new OrderManagementService().AddProductToCart(productToAdd, loginInfo.User.UserId);
+            }
+            catch (Exception ex) {
+                Console.WriteLine(ex.Message);
+                AddProductToCart();
+            }
+        
         }
 
         public static void ViewProductInCart() {
@@ -286,12 +331,12 @@ namespace ShoppingCartSystem
             if (loginInfo.User.UserRole.ToString() == "Admin")
             {
                 Console.WriteLine("Input action number :");
-                isUserWantToLogout=AdminActions(EnterNumber());
+                isUserWantToLogout=AdminActions(EnterDigit());
             }
             else
             {
                 Console.WriteLine("Input action number :");
-                isUserWantToLogout=UserActions(EnterNumber());
+                isUserWantToLogout=UserActions(EnterDigit());
             }
             isUserWantToLogout=DoYouWantToContinue();
             return isUserWantToLogout;
@@ -558,7 +603,7 @@ namespace ShoppingCartSystem
             }
             else
             {
-                Console.WriteLine(loginInfo.Message);
+                Console.WriteLine(loginInfo.Message);              
             }
             return loginInfo.LoginStaus;
         }
@@ -591,7 +636,7 @@ namespace ShoppingCartSystem
             Console.WriteLine("Enter 1 for Admin and 2 For User role");
 
             int roleValue = 0;
-            int.TryParse(Console.ReadLine(), out roleValue);
+            int.TryParse(Console.ReadKey().KeyChar.ToString(), out roleValue);
             Console.WriteLine();
 
             if ((roleValue - 1) < 0 || (roleValue - 1) > 1)
