@@ -22,8 +22,7 @@ namespace ShoppingCartSystem.Core
         public List<Products> GetAllAvailableProducts()
         {
             if (products.Count > 0)
-            {
-                Console.WriteLine("Product Details :");
+            {          
                 foreach (var product in products)
                 {
                     Console.WriteLine("Product ID : {0} | Name : {1} | Price : {2}", product.ProductId, product.Name, product.Price);
