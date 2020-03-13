@@ -166,7 +166,7 @@ namespace ShoppingCartSystem.Core
                 {
                     foreach (var product in productsInCart)
                     {
-                        ProductManagementService.UpdateProductsDetailAfterOrder(product.Product);
+                        ProductManagementService.UpdateProductQuantityAfterApplyOrder(product.Product);
                         newOrderId = CreateOrder(product.Product, userId);
                     }
                     Console.WriteLine("Applied Successfully.");

@@ -111,7 +111,7 @@ namespace ShoppingCartSystem.Core
             }
         }
 
-        public static void UpdateProductsDetailAfterOrder(Products product)
+        public static void UpdateProductQuantityAfterApplyOrder(Products product)
         {
 
             var prodDetail = products.Find(x => x.ProductId == product.ProductId);
@@ -119,6 +119,32 @@ namespace ShoppingCartSystem.Core
 
         }
 
+        public static void UpdateProductInfo(int productId, int quantity)
+        {
+
+            var prodDetail = products.Find(x => x.ProductId == productId);
+            products.Select(x => { x.Quantity = quantity; return x; }).ToList();
+
+        }
+
+        public static void UpdateProductInfo(int productId, decimal price)
+        {
+
+            var prodDetail = products.Find(x => x.ProductId == productId);
+            products.Select(x => { x.Price = price; return x; }).ToList();
+        }
+
+        public static void UpdateProductInfo(int productId, string desciption)
+        {
+            var prodDetail = products.Find(x => x.ProductId == productId);
+            products.Select(x => { x.Description = desciption; return x; }).ToList();
+        }
+
+        public static void UpdateProductInfoName(int productId, string name)
+        {
+            var prodDetail = products.Find(x => x.ProductId == productId);
+            products.Select(x => { x.Name = name; return x; }).ToList();
+        }
 
         public static void UpdateProductsDetailAfterCancelProduct(Products product)
         {
