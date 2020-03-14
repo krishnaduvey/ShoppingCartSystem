@@ -12,7 +12,6 @@ namespace ShoppingCartSystem.Core
         public static List<Cart> cartProduct = new List<Cart>();
         public static List<OrderDetail> order = new List<OrderDetail>();
         public static decimal totalAmount = 0;
-        private static bool isProductExistInCart = false;
         private static int orderId = 1;
 
 
@@ -49,7 +48,9 @@ namespace ShoppingCartSystem.Core
         /// <returns>return boolean value for this particular event.</returns>
         public bool AddProductToCart(Products product, int userId)
         {
-            if (product.Quantity <= ProductManagementService.GetProductQuantity(product.ProductId))
+            bool isProductAvailable = false;
+            isProductAvailable = product.Quantity <= ProductManagementService.GetProductQuantity(product.ProductId);
+            if (isProductAvailable)
             {
                 cartProduct.Add(new Cart() { UserId = userId, Product = product });
                 return true;
@@ -234,8 +235,8 @@ namespace ShoppingCartSystem.Core
                 }
                 else
                     return false;
-            } catch (Exception ex) {
-                Console.WriteLine(ex.Message);
+            } catch (Exception ) {
+                Console.WriteLine("Order not avilable.");
                 return false;
             }
         }

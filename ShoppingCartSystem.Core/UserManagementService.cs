@@ -70,9 +70,16 @@ namespace ShoppingCartSystem.Core
                 PhoneNumber = user.PhoneNumber,
                 UserRole = user.UserRole
             };
+            try
+            {
+                users.Add(newUser);
+                return newUser;
+            }
+            catch (Exception )
+            {
+                return null;
+            }
 
-            users.Add(newUser);
-            return newUser;
         }
 
 
@@ -154,12 +161,25 @@ namespace ShoppingCartSystem.Core
 
         public static bool IsPhoneNumber(string number)
         {
-            return Regex.Match(number, @"^(\+[0-9]{9,14})$").Success;
-        }
+            if (number.Length == 10 && IsContainsDigitOnly(number))
+                return true;
 
+                return Regex.Match(number, @"^\s*(?:\+?(\d{1,3}))?[- (]*(\d{3})[- )]*(\d{3})[- ]*(\d{4})(?: *[x/#]{1}(\d+))?\s*$").Success;
+        }
+        private static bool IsContainsDigitOnly(string num) {
+            foreach (char c in num)
+            {
+                if (c < '0' || c > '9')
+                    return false;
+            }
+
+            return true;
+        }
         public static bool IsPasswordCriteriaMatch(string password)
         {
-            return Regex.Match(password, @"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$").Success;
+            if (password.Length > 6)
+                return true;
+            else return false;
         }
 
         public static bool IsValidName(string nameCheck)
@@ -167,10 +187,7 @@ namespace ShoppingCartSystem.Core
             var name = nameCheck.Trim();
             if (name.Length <= 0)
                 return false;
-            if (!Regex.IsMatch(name, @"^[\p{L}\p{M}' \.\-]+$"))
-            {
-                return false;
-            }
+           
             return true;
 //            return Regex.Match(name, @"^{1,}$").Success;
         }

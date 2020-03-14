@@ -7,7 +7,6 @@ namespace ShoppingCartSystem
 {
     class Program
     {
-        private static int userFilterKey;
         private static LoginDetails loginInfo;
         private static bool isUserLoggedIn = false;
         private static Role? userType;
@@ -27,22 +26,24 @@ namespace ShoppingCartSystem
 
             do
             {
-                bool isUserWantToLogin = false;
                 do
-                {                    
-                        if (userType.ToString() == "Admin") {
+                {
+                    if (userType.ToString() == "Admin")
+                    {
+                        isUserLoggedIn = LoginToApplication();
+                    }
+                    else
+                    {
+                        if (DoYouHaveAnAccount())
+                        {
                             isUserLoggedIn = LoginToApplication();
-                        } else {
-                            if (DoYouHaveAnAccount())
-                            {
-                                isUserLoggedIn = LoginToApplication();
-                            }
-                            else
-                            {
-                                Users user = AddNewUser();
-                                isUserLoggedIn = LoginToApplication();
-                            }
                         }
+                        else
+                        {
+                            Users user = AddNewUser();
+                            isUserLoggedIn = LoginToApplication();
+                        }
+                    }
 
                 } while (!isUserLoggedIn);
 
@@ -61,10 +62,10 @@ namespace ShoppingCartSystem
                 ActionsToBePerform();
                 Console.WriteLine();
             }
-            while (isUserLoggedIn)
+            do
             {
                 isUserLoggedIn = PerformAction();
-            }
+            } while (isUserLoggedIn);
 
             goto Start;
 
@@ -84,7 +85,7 @@ namespace ShoppingCartSystem
                 Console.WriteLine("Input action number :");
                 isUserWantToLogout = UserActions(EnterDigit());
             }
-            isUserWantToLogout = DoYouWantToContinue();
+            //isUserWantToLogout = DoYouWantToContinue();
             return isUserWantToLogout;
         }
 
@@ -244,10 +245,10 @@ namespace ShoppingCartSystem
                     break;
                 case 9:
                     Console.WriteLine();
-                    Console.WriteLine(" Thank you Mr. {0}", loginInfo.User.Name);
+                    Console.WriteLine("\nThank you Mr. {0}", loginInfo.User.Name);
                     Console.WriteLine();
                     return isUserLoggedIn = false;
-
+                    
                 default:
                     Console.WriteLine();
                     if (value == 0)
@@ -310,7 +311,8 @@ namespace ShoppingCartSystem
         private static int AddNewProducts()
         {
 
-            int price, quantity;
+            int quantity;
+            decimal price;
             Console.WriteLine("Enter Product Name :");
             string name = Console.ReadLine();
 
@@ -318,10 +320,9 @@ namespace ShoppingCartSystem
             string description = Console.ReadLine();
 
             Console.WriteLine("Enter Price of product :");
-            price = ValidateInputPrice(out price);
+            price = ValidatePrice(out price);
             Console.WriteLine("Enter Quantity of product :");
-            quantity = ValidateInputPrice(out quantity);
-
+            quantity = ValidateQuantity(out quantity);
             var newProduct = new Products()
             {
                 Name = name,
@@ -329,14 +330,21 @@ namespace ShoppingCartSystem
                 Quantity = quantity,
                 Price = price,
             };
-            return new ProductManagementService().AddNewProduct(newProduct);
+           int producId= new ProductManagementService().AddNewProduct(newProduct);
+            if (producId > 0)
+            {
+                Console.WriteLine("New Product added.");
+                return producId;
+            }
+            else {
+                Console.WriteLine("Product does not added.");
+                return producId;
+            }
         }
 
         private static void ModifyProduct()
         {
             Console.WriteLine("Enter Product Id :");
-
-
             new ProductManagementService().UpdateProductInfo(
                                new Products()
                                {
@@ -374,20 +382,11 @@ namespace ShoppingCartSystem
             Console.WriteLine("--------------------------------------------");
             Console.WriteLine();
 
-            Console.WriteLine("Enter Name :");
-            string name = Console.ReadLine();
-
-            string username = InsertUserName();
-
-            Console.WriteLine("Enter Password :");
-            string password = Console.ReadLine();
-
-            Console.WriteLine("Enter Phone Number :");
-            string phonenumber = Console.ReadLine();
-
-            bool isValid = ValidateRegistration(name, password, phonenumber);
-            if (isValid)
-            {
+            string username = EnterUserName();
+            string name = EnterName();
+            string phonenumber = EnterPhoneNumber();
+            string password = EnterPassword();
+         
                 var newUser = new Users()
                 {
                     Name = name,
@@ -397,10 +396,18 @@ namespace ShoppingCartSystem
                     UserRole = addRoleToUser()
 
                 };
-                return new UserManagementService().UserRegistration(newUser);
+                var user=new UserManagementService().UserRegistration(newUser);
+            if (user!=null)
+            {
+                Console.WriteLine("New User created..");
+                return user;
             }
             else
-                return AddNewUser();
+            {
+                Console.WriteLine("User does not created.");
+                return null;
+            }
+
         }
         private static void RemoveUser()
         {
@@ -441,14 +448,18 @@ namespace ShoppingCartSystem
                 };
                 isProductAdded = new OrderManagementService().AddProductToCart(productToAdd, loginInfo.User.UserId);
                 if (!isProductAdded)
-                    Console.WriteLine("No stock available for this much number of quantity");
-                return isProductAdded;
+                {
+                    Console.WriteLine("\nNo stock available for this much number of quantity");
+                    return isProductAdded;
+
+                }
             }
-            catch (Exception ex)
+            catch (Exception )
             {
-                Console.WriteLine(ex.Message);
+                Console.WriteLine("\nProduct not available.");
+                isProductAdded = false;
             }
-            return AddProductToCart();
+            return isProductAdded;
         }
 
         private static bool RemoveProductFromCart()
@@ -557,34 +568,72 @@ namespace ShoppingCartSystem
             return EnterDigit();
         }
 
-        private static bool ValidateRegistration(string name, string password, string phone)
+        private static string EnterPassword()
         {
             bool isValidInput = false;
-            isValidInput = UserManagementService.IsValidName(name);
-            if (!isValidInput)
-                Console.WriteLine("Please provide valid name. Length should be one or more then.. Please Try again...");
-            isValidInput = UserManagementService.IsPhoneNumber(phone);
-            if (!isValidInput)
-                Console.WriteLine("Please provide valid number. Phone should contains 9 to 14 digits only. Please Try again...");
-            isValidInput = UserManagementService.IsPasswordCriteriaMatch(password);
-            if (!isValidInput)
-                Console.WriteLine("Please provide valid password. Password should contains :\" Minimum six characters, at least one letter and one number \"");
+            Console.WriteLine("Enter Password :");
+            string password = Console.ReadLine();
 
-            return isValidInput;
+            isValidInput = UserManagementService.IsPasswordCriteriaMatch(password);
+            
+            if (isValidInput)
+            {
+                return password;
+            }
+            else
+            {
+                Console.WriteLine("Please provide valid password. Password should contains :\" Minimum six characters \"");
+            }
+            return EnterPassword();
         }
+
+        private static string EnterName()
+        {
+            bool isValidInput = false;
+            Console.WriteLine("Enter Name :");
+            string name = Console.ReadLine();
+            isValidInput = UserManagementService.IsValidName(name);
+            if (isValidInput)
+            {
+                return name;
+            }
+            else
+            {
+                Console.WriteLine("Please provide valid name. Length should be one or more then.. Please Try again...");
+            }
+
+           return EnterName();
+        }
+
+        private static string EnterPhoneNumber() {
+            bool isValidInput = false;            
+            Console.WriteLine("Enter Phone Number :");
+            string phone = Console.ReadLine();
+            isValidInput = UserManagementService.IsPhoneNumber(phone);
+            if (isValidInput)
+            {
+                return phone;
+            }
+            else
+            {
+                Console.WriteLine("Please provide valid number. Phone should contains 9 to 14 digits only. Please Try again...");
+            }
+            return EnterPhoneNumber();
+        }
+
 
         private static int CheckValidProductQuantity(int productId)
         {
             int quantity = 0;
-            Console.WriteLine("Enter Quantity of product :");
-            quantity = ValidateInputPrice(out quantity);
+            Console.WriteLine("Enter Quantity :");
+            quantity = ValidateQuantity(out quantity);
             int leftQuantityOfProduct = ProductManagementService.GetProductQuantity(productId);
             if (leftQuantityOfProduct > quantity)
                 return quantity;
             else
             {
                 Console.WriteLine();
-                Console.WriteLine("This much quanity nto availale.", quantity);
+                Console.WriteLine("This much quanity not available.", quantity);
                 Console.WriteLine("Only few {0} products left in stock. Try again with valid quantity.", leftQuantityOfProduct);
                 Console.WriteLine();
             }
@@ -641,7 +690,6 @@ namespace ShoppingCartSystem
             Console.WriteLine("[1] to Admin?");
             Console.WriteLine("[2] to Normal User?\n");
             int inputNumber = 0;
-            Role userRole;
             try
             {
                 inputNumber = EnterDigit();
@@ -653,7 +701,7 @@ namespace ShoppingCartSystem
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Please provide valid input type?\n");
+                Console.WriteLine("Please provide valid input type?\n{0}", ex.Message);
                 return GetUserType();
             }
             Console.WriteLine("Please Enter valid input type?\n");
@@ -700,8 +748,8 @@ namespace ShoppingCartSystem
             {
                 Console.WriteLine();
                 Console.WriteLine("Do you want to continue with us :");
-                if(loginInfo!=null)
-                Console.WriteLine("Please input Y/N : 'Y' to Continue and 'N' to Logout");
+                if (loginInfo != null)
+                    Console.WriteLine("Please input Y/N : 'Y' to Continue and 'N' to Logout");
                 else
                     Console.WriteLine("Please input Y/N : 'Y' to Continue and 'N' to Re-start application.");
                 char input = Console.ReadKey().KeyChar;
@@ -713,12 +761,12 @@ namespace ShoppingCartSystem
                 }
                 else if (inputChar == 'N')
                 {
-                        return false;
+                    return false;
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine("Please provide valid input... and try again");
+                Console.WriteLine("Please provide valid input... and try again\n{0}", ex.Message);
             }
             return DoYouWantToContinue();
         }
@@ -749,27 +797,11 @@ namespace ShoppingCartSystem
             return DoYouWantToLoginToTheApplication(null);
         }
 
-        private static bool AskForLogin()
-        {
-            Console.WriteLine("");
-
-            Console.WriteLine("Are you a User or Admin?");
-            Console.WriteLine("Press 1 for Admin?");
-            Console.WriteLine("Press 2 for User?");
-
-
-
-            if (userFilterKey == 1 || userFilterKey == 2)
-            {
-            }
-            else if (userFilterKey == 3)
-            {
-
-            }
-
-            return false;
-        }
-
+       
+        /// <summary>
+        /// Select role for user.
+        /// </summary>
+        /// <returns>returns the user</returns>
         private static Role addRoleToUser()
         {
             Console.WriteLine("Enter 1 for Admin and 2 For User role");
@@ -794,7 +826,12 @@ namespace ShoppingCartSystem
             return role;
         }
 
-        private static int ValidateInputPrice(out int input)
+        /// <summary>
+        /// Price input
+        /// </summary>
+        /// <param name="input"></param>
+        /// <returns></returns>
+        private static int ValidateQuantity(out int input)
         {
             string userInput;
             do
@@ -804,45 +841,43 @@ namespace ShoppingCartSystem
             return input;
         }
 
-        private static string InsertUserName()
+        private static decimal ValidatePrice(out decimal input)
+        {
+            string userInput;
+            do
+            {
+                userInput = Console.ReadLine();
+            } while (!decimal.TryParse(userInput, out input));
+            return input;
+        }
+
+
+
+
+
+
+        /// <summary>
+        /// Username input
+        /// </summary>
+        /// <returns> returns the unique username.</returns>
+        private static string EnterUserName()
         {
             Console.WriteLine("Enter Username :");
             string username = Console.ReadLine();
 
-            if (!UserManagementService.IsUserExists(username) && username.Length >= 1)
-                return username;
-            else
+            if (!UserManagementService.IsUserExists(username))
             {
-                Console.WriteLine("User already exists,Please add different username.");
+                if (username.Length > 4)
+                    return username;
+                else
+                    Console.WriteLine("Username length should be more than 4");
             }
-            return InsertUserName();
+            else
+            Console.WriteLine("User already exists,Please add different username.");
+                
+            return EnterUserName();
         }
 
-        private static bool InputKeyValidation()
-        {
-            Console.WriteLine();
-            try
-            {
-                int number = 0;
-                char input = Console.ReadKey().KeyChar;
-                Console.WriteLine();
-                userFilterKey = int.Parse(input + "");
-                if (userFilterKey == 1 || userFilterKey == 2 || userFilterKey == 3)
-                    return true;
-                else
-                {
-                    Console.WriteLine();
-                    Console.WriteLine("Please check your input and Try Again...");
-                    return false;
-                }
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine();
-                Console.WriteLine("Please check your input and Try Again...");
-                return false;
-            }
-        }
 
         /// <summary>
         /// Print orders details.

@@ -56,20 +56,26 @@ namespace ShoppingCartSystem.Core
         public int AddNewProduct(Products product)
         {
             int productId = 1;
-            if (products.Count > 0)
-            {
-                productId = InsertProductId();
+            try {
+                if (products.Count > 0)
+                {
+                    productId = InsertProductId();
+                }
+                products.Add(new Products()
+                {
+                    ProductId = productId,
+                    Name = product.Name,
+                    Description = product.Description,
+                    Quantity = product.Quantity,
+                    Price = product.Price,
+                }
+                );
+                return products.Select(x => x.ProductId).Last();
             }
-            products.Add(new Products()
-            {
-                ProductId = productId,
-                Name = product.Name,
-                Description = product.Description,
-                Quantity = product.Quantity,
-                Price = product.Price,
+            catch (Exception ) {
+                return -1;
             }
-            );
-            return products.Select(x => x.ProductId).Last();
+           
         }
 
 
