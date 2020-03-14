@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using ShoppingCartSystem.Abstraction.Model;
 using ShoppingCartSystem.Abstraction;
-
+using System.Text.RegularExpressions;
 
 namespace ShoppingCartSystem.Core
 {
@@ -105,16 +105,16 @@ namespace ShoppingCartSystem.Core
 
 
 
-        public bool DeleteUser(int userId)
+        public bool DeleteUser(string username)
         {
             try
             {
-                if (userId == 1)
+                if (username == "admin")
                 {
                     Console.WriteLine("Admin user cann't be deleted.");
                     return false;
                 }
-                var result = users.Remove(users.Single(x => x.UserId == userId));
+                var result = users.Remove(users.Single(x => x.UserName == username));
                 return result;
             }
             catch (ArgumentNullException argumentNull)
@@ -150,6 +150,29 @@ namespace ShoppingCartSystem.Core
             {
                 userActions.Add(actions[i], i);
             }
+        }
+
+        public static bool IsPhoneNumber(string number)
+        {
+            return Regex.Match(number, @"^(\+[0-9]{9,14})$").Success;
+        }
+
+        public static bool IsPasswordCriteriaMatch(string password)
+        {
+            return Regex.Match(password, @"^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{6,}$").Success;
+        }
+
+        public static bool IsValidName(string nameCheck)
+        {
+            var name = nameCheck.Trim();
+            if (name.Length <= 0)
+                return false;
+            if (!Regex.IsMatch(name, @"^[\p{L}\p{M}' \.\-]+$"))
+            {
+                return false;
+            }
+            return true;
+//            return Regex.Match(name, @"^{1,}$").Success;
         }
     }
 }

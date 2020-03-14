@@ -21,18 +21,6 @@ namespace ShoppingCartSystem.Core
         /// <returns> returns List of product type. </returns>
         public List<Products> GetAllAvailableProducts()
         {
-            if (products.Count > 0)
-            {          
-                foreach (var product in products)
-                {
-                    Console.WriteLine("Product ID : {0} | Name : {1} | Price : {2}", product.ProductId, product.Name, product.Price);
-                }
-            }
-            else
-            {
-                Console.WriteLine("No stock available.");
-            }
-
             return products;
         }
 

@@ -9,14 +9,14 @@ namespace ShoppingCartSystem.Core
 {
     public class OrderManagementService : IOrderManagement
     {
-        private static List<Cart> cartProduct = new List<Cart>();
-        private static List<OrderDetail> order = new List<OrderDetail>();
-        private static decimal totalAmount = 0;
+        public static List<Cart> cartProduct = new List<Cart>();
+        public static List<OrderDetail> order = new List<OrderDetail>();
+        public static decimal totalAmount = 0;
         private static bool isProductExistInCart = false;
         private static int orderId = 1;
 
 
-        #region Cart
+        
 
         #region View Products in Cart
         /// <summary>
@@ -27,17 +27,11 @@ namespace ShoppingCartSystem.Core
         public List<Products> ViewProductsInCart(int userId)
         {
             var productsInCart = GetProductListFromCart(userId);
-            if (productsInCart == null)
+            if (productsInCart != null)
             {
-                Console.WriteLine("Cart is empty.");
-            }
-            else
-            {
-                printCartDetails(productsInCart);
                 var listOfProduct = from prod in productsInCart
                                     where prod.UserId == userId
                                     select prod.Product;
-
                 return listOfProduct.ToList();
             }
             return null;
@@ -61,7 +55,6 @@ namespace ShoppingCartSystem.Core
                 return true;
             }
             else
-                Console.WriteLine("No stock available for this much number of quantity");
             return false;
         }
         #endregion
@@ -104,10 +97,10 @@ namespace ShoppingCartSystem.Core
         }
         #endregion
 
-
-        #endregion
-
-        #region Order
+        public static bool isProductInCart(int productId, int userId) {
+           bool isProductInCart= cartProduct.Any(x => (x.Product.ProductId == productId) && (x.UserId == userId));            
+            return isProductInCart;
+        }
 
         #region User can Get Order detaill using orderId
         /// <summary>
@@ -168,27 +161,28 @@ namespace ShoppingCartSystem.Core
                     {
                         ProductManagementService.UpdateProductQuantityAfterApplyOrder(product.Product);
                         newOrderId = CreateOrder(product.Product, userId);
-                    }
-                    Console.WriteLine("Applied Successfully.");
+                    }                   
                     return true;
                 }
-                else {
-                   
-                    foreach (var prod in outOfStock) {
-                        Console.WriteLine("Product {0} is Out of Stock. Please remove from Cart.", ProductManagementService.GetProductName(prod.ProductId) );
+                else
+                {
+
+                    foreach (var prod in outOfStock)
+                    {
+                        Console.WriteLine("Product {0} is Out of Stock. Please remove from Cart.", ProductManagementService.GetProductName(prod.ProductId));
                     }
-                    
                     return false;
-                }            
+                }
             }
             else
             {
                 Console.WriteLine("Cart is empty.");
                 return false;
-            }        
+            }
         }
 
-        private bool isAllCartProductInStock(int userId) {
+        private bool isAllCartProductInStock(int userId)
+        {
             var productsInCart = GetProductListFromCart(userId);
             var productQuant = productsInCart.All(x => x.Product.Quantity < ProductManagementService.GetProductQuantity(x.Product.ProductId));
             return productQuant;
@@ -230,14 +224,24 @@ namespace ShoppingCartSystem.Core
         /// <returns>returns boolean value for cancel order.</returns>
         public bool CancelOrder(int OrderId, int userId)
         {
-            var orderData = GetOrderDetails(orderId);
-            order.RemoveAll(x => (x.OrderId == orderId) && (x.UserId == userId));
-            ProductManagementService.UpdateProductsDetailAfterCancelProduct(orderData.Product);
-            return true;
+            try {
+                var orderData = GetOrderDetails(orderId);
+                if (orderData != null)
+                {
+                    order.RemoveAll(x => (x.OrderId == orderId) && (x.UserId == userId));
+                    ProductManagementService.UpdateProductsDetailAfterCancelProduct(orderData.Product);
+                    return true;
+                }
+                else
+                    return false;
+            } catch (Exception ex) {
+                Console.WriteLine(ex.Message);
+                return false;
+            }
         }
         #endregion
 
-        #region View all orders via admin/ current user
+        
         /// <summary>
         /// View all orders
         /// </summary>
@@ -262,7 +266,6 @@ namespace ShoppingCartSystem.Core
         private static List<OrderDetail> AllOrders()
         {
             var ordersWatchByAdmin = from ord in order select ord;
-            printOrderDetails(ordersWatchByAdmin.ToList());
             return ordersWatchByAdmin.ToList();
         }
 
@@ -276,40 +279,10 @@ namespace ShoppingCartSystem.Core
             var ordersWatchByNonAdmin = from ord in order
                                         where ord.UserId == userId
                                         select ord;
-            printOrderDetails(ordersWatchByNonAdmin.ToList());
             return ordersWatchByNonAdmin.ToList();
         }
 
-        /// <summary>
-        /// Print orders details.
-        /// </summary>
-        /// <param name="orders"> order list.</param>
-        private static void printOrderDetails(List<OrderDetail> orders)
-        {
-            Console.WriteLine("Order Details :");
-            foreach (var order in orders)
-            {
-                Console.WriteLine("Order Id : {0}\t|\tProduct Name : {1}\t|\tQuantity : {2}\t|\tOrderStatus : {3}", order.OrderId, ProductManagementService.GetProductName(order.Product.ProductId), order.Product.Quantity, order.Status);
-            }
-        }
 
-        /// <summary>
-        /// Print Cart details.
-        /// </summary>
-        /// <param name="products">List of products in a cart.</param>
-        private static void printCartDetails(List<Cart> products)
-        {
-            Console.WriteLine("Items in your Cart :");
-            foreach (var product in products)
-            {
-
-                Console.WriteLine("Item Name : {0}\t|\tQuantity : {1}\t|\tItem Price : {2}", ProductManagementService.GetProductName(product.Product.ProductId),
-                    product.Product.Quantity, GetTotalPriceAccordingToQuantity(ProductManagementService.GetProductPrice(product.Product.ProductId), product.Product.Quantity));
-                totalAmount += GetTotalPriceAccordingToQuantity(ProductManagementService.GetProductPrice(product.Product.ProductId), product.Product.Quantity);
-            }
-            Console.WriteLine("Total Amount : {0}", totalAmount);
-        }
-        #endregion
 
         #region Get order status via orderId
         /// <summary>
@@ -351,11 +324,6 @@ namespace ShoppingCartSystem.Core
         #endregion
 
 
-        #endregion
-
-
-
-
 
         #region Add product to cart util function just to add product without making object of product model
         private void AddProductToCart(int productId, int quantity, int userId)
@@ -368,6 +336,8 @@ namespace ShoppingCartSystem.Core
             };
             AddProductToCart(product, userId);
         }
+
+       
         #endregion
 
         #region Get Product List from Cart (util)
@@ -407,5 +377,9 @@ namespace ShoppingCartSystem.Core
 
 
         // update cart prduct
+        public void ModifyCartProduct(Products productId,int userId) { 
+        
+            //
+        }
     }
 }

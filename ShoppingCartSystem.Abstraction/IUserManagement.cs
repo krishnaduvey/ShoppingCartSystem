@@ -11,7 +11,7 @@ namespace ShoppingCartSystem.Abstraction
         LoginDetails Login(string username, string password);
         Users UserRegistration(Users user);
 
-        bool DeleteUser(int userId);
+        bool DeleteUser(string username);
 
 
     }
