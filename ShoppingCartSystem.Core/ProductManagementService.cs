@@ -7,7 +7,7 @@ using ShoppingCartSystem.Abstraction;
 
 namespace ShoppingCartSystem.Core
 {
-    public class ProductManagementService
+    public class ProductManagementService : IProductManagement
     {
         // view , modify, remove { item number, item detail}
         // out of stock
@@ -93,56 +93,112 @@ namespace ShoppingCartSystem.Core
         /// Update product information
         /// </summary>
         /// <param name="product"> contains product related information that need to update.</param>
-        public void UpdateProductInfo(Products product)
+        public Products UpdateProductInfo(Products product)
         {
             var productToUpdate = products.Where(x => x.ProductId == product.ProductId);
             if (products.Count() > 0)
             {
-                var toUpdate = productToUpdate.First<Products>();
-                products.Remove(toUpdate);
-                products.Add(product);
+                productToUpdate.Select(x => 
+                { 
+                    x.Name = product.Name;
+                    x.Description = product.Description;
+                    x.Price = product.Price;
+                    x.Quantity = product.Quantity;
+                    return x; 
+                }).ToList();
+                return productToUpdate.First<Products>();              
             }
+            return null;
         }
 
-        public static void UpdateProductQuantityAfterApplyOrder(Products product)
+        public static Products UpdateProductQuantity(Products product)
         {
-
-            var prodDetail = products.Find(x => x.ProductId == product.ProductId);
-            products.Select(c => { c.Quantity = (c.Quantity - product.Quantity); return c; }).ToList();
+            var prodDetail = products.Where(x => x.ProductId == product.ProductId);
+            if (products.Count() > 0)
+            {
+                prodDetail.Select(x =>
+                {
+                    x.Quantity = product.Quantity;
+                    return x;
+                }).ToList();
+                return prodDetail.First<Products>();
+            }
+            return null;
+        }
+        public static Products UpdateProductDescription(Products product)
+        {
+            var prodDetail = products.Where(x => x.ProductId == product.ProductId);
+            if (products.Count() > 0)
+            {
+                prodDetail.Select(x =>
+                {
+                    x.Description = product.Description;
+                    return x;
+                }).ToList();
+                return prodDetail.First<Products>();
+            }
+            return null;
 
         }
-
-        public static void UpdateProductInfo(int productId, int quantity)
+        public static Products UpdateProductName(Products product)
         {
-
-            var prodDetail = products.Find(x => x.ProductId == productId);
-            products.Select(x => { x.Quantity = quantity; return x; }).ToList();
-
+            var prodDetail = products.Where(x => x.ProductId == product.ProductId);
+            if (products.Count() > 0)
+            {
+                prodDetail.Select(x =>
+                {
+                    x.Name = product.Name;
+                    return x;
+                }).ToList();
+                return prodDetail.First<Products>();
+            }
+            return null;
+        }
+        public static Products UpdateProductPrice(Products product)
+        {
+            var prodDetail = products.Where(x => x.ProductId == product.ProductId);
+            if (products.Count() > 0)
+            {
+                prodDetail.Select(x =>
+                {
+                    x.Price = product.Price;
+                    return x;
+                }).ToList();
+                return prodDetail.First<Products>();
+            }
+            return null;
         }
 
-        public static void UpdateProductInfo(int productId, decimal price)
-        {
 
-            var prodDetail = products.Find(x => x.ProductId == productId);
-            products.Select(x => { x.Price = price; return x; }).ToList();
+        public static Products UpdateProductQuantityAfterApplyOrder(Products product)
+        {
+            var prodDetail = products.Where(x => x.ProductId == product.ProductId);
+            if (products.Count() > 0)
+            {
+                prodDetail.Select(x =>
+                {
+                    x.Quantity = x.Quantity - product.Quantity;
+                    return x;
+                }).ToList();
+                return prodDetail.First<Products>();
+            }
+            return null;
         }
 
-        public static void UpdateProductInfo(int productId, string desciption)
-        {
-            var prodDetail = products.Find(x => x.ProductId == productId);
-            products.Select(x => { x.Description = desciption; return x; }).ToList();
-        }
 
-        public static void UpdateProductInfoName(int productId, string name)
+        public static Products UpdateProductsDetailAfterCancelProduct(Products product)
         {
-            var prodDetail = products.Find(x => x.ProductId == productId);
-            products.Select(x => { x.Name = name; return x; }).ToList();
-        }
-
-        public static void UpdateProductsDetailAfterCancelProduct(Products product)
-        {
-            var prodDetail = products.Find(x => x.ProductId == product.ProductId);
-            products.Select(c => { c.Quantity = (c.Quantity + product.Quantity); return c; }).ToList();
+            var prodDetail = products.Where(x => x.ProductId == product.ProductId);
+            if (products.Count() > 0)
+            {
+                prodDetail.Select(x =>
+                {
+                    x.Quantity = x.Quantity + product.Quantity;
+                    return x;
+                }).ToList();
+                return prodDetail.First<Products>();
+            }
+            return null;
         }
 
 

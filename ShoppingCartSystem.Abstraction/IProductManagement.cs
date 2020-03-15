@@ -8,14 +8,14 @@ using ShoppingCartSystem.Abstraction.Model;
 
 namespace ShoppingCartSystem.Abstraction
 {
-    interface IProductManagement
+    public interface IProductManagement
     {
-        Products AddProduct(Products products);
-        int DeleteProduct(int productId);
-        bool DeleteProduct(int product, int quantity);
-        bool UpdateProduct(Products product);
+        int AddNewProduct(Products products);
+        bool DeleteProduct(int productId);
 
-        List<Products> ShowAllProducts();
+        Products UpdateProductInfo(Products product);
+
+        List<Products> GetAllAvailableProducts();
 
     }
 }

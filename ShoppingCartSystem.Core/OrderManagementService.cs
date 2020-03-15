@@ -162,7 +162,13 @@ namespace ShoppingCartSystem.Core
                     {
                         ProductManagementService.UpdateProductQuantityAfterApplyOrder(product.Product);
                         newOrderId = CreateOrder(product.Product, userId);
-                    }                   
+                        if (newOrderId != 0)
+                            new OrderManagementService().RemoveProductFromCart(product.Product.ProductId,userId);
+                        else
+                            Console.WriteLine("{0} Can't Removed.", product.Product.Name);
+
+                    }
+                    
                     return true;
                 }
                 else
@@ -185,7 +191,7 @@ namespace ShoppingCartSystem.Core
         private bool isAllCartProductInStock(int userId)
         {
             var productsInCart = GetProductListFromCart(userId);
-            var productQuant = productsInCart.All(x => x.Product.Quantity < ProductManagementService.GetProductQuantity(x.Product.ProductId));
+            var productQuant = productsInCart.All(x => x.Product.Quantity <= ProductManagementService.GetProductQuantity(x.Product.ProductId));
             return productQuant;
         }
 
@@ -223,7 +229,7 @@ namespace ShoppingCartSystem.Core
         /// <param name="OrderId">Order id of a orders.</param>
         /// <param name="userId">userid of user.</param>
         /// <returns>returns boolean value for cancel order.</returns>
-        public bool CancelOrder(int OrderId, int userId)
+        public bool CancelOrder(int orderId, int userId)
         {
             try {
                 var orderData = GetOrderDetails(orderId);
@@ -378,9 +384,18 @@ namespace ShoppingCartSystem.Core
 
 
         // update cart prduct
-        public void ModifyCartProduct(Products productId,int userId) { 
-        
-            //
+        public Cart ModifyCartProduct(Products product,int userId) {
+            var prodDetail = cartProduct.Where(x => (x.Product.ProductId == product.ProductId) && x.UserId==userId);
+            if (cartProduct.Count() > 0)
+            {
+                prodDetail.Select(x =>
+                {
+                    x.Product.Quantity = product.Quantity;
+                    return x;
+                }).ToList();
+                return prodDetail.First<Cart>();
+            }
+            return null;
         }
     }
 }
