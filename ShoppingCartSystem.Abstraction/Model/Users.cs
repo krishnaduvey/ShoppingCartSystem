@@ -24,6 +24,7 @@ namespace ShoppingCartSystem.Abstraction.Model
 
         public string PhoneNumber { get; set; }
 
+        public string Email { get; set; }
         public Role? UserRole { get; set; }
     }
 }

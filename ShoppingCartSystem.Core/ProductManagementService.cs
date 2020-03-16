@@ -9,10 +9,6 @@ namespace ShoppingCartSystem.Core
 {
     public class ProductManagementService : IProductManagement
     {
-        // view , modify, remove { item number, item detail}
-        // out of stock
-        // how many product left associated with product id
-
         public static List<Products> products = new List<Products>();
 
         /// <summary>
@@ -89,6 +85,7 @@ namespace ShoppingCartSystem.Core
             return lastAddedProduct.ProductId + 1;
         }
 
+        #region Update Product information
         /// <summary>
         /// Update product information
         /// </summary>
@@ -111,7 +108,12 @@ namespace ShoppingCartSystem.Core
             return null;
         }
 
-        public static Products UpdateProductQuantity(Products product)
+        /// <summary>
+        /// Update the product quantity information.
+        /// </summary>
+        /// <param name="product"></param>
+        /// <returns></returns>
+        public Products UpdateProductQuantity(Products product)
         {
             var prodDetail = products.Where(x => x.ProductId == product.ProductId);
             if (products.Count() > 0)
@@ -125,7 +127,7 @@ namespace ShoppingCartSystem.Core
             }
             return null;
         }
-        public static Products UpdateProductDescription(Products product)
+        public Products UpdateProductDescription(Products product)
         {
             var prodDetail = products.Where(x => x.ProductId == product.ProductId);
             if (products.Count() > 0)
@@ -140,7 +142,7 @@ namespace ShoppingCartSystem.Core
             return null;
 
         }
-        public static Products UpdateProductName(Products product)
+        public Products UpdateProductName(Products product)
         {
             var prodDetail = products.Where(x => x.ProductId == product.ProductId);
             if (products.Count() > 0)
@@ -154,7 +156,7 @@ namespace ShoppingCartSystem.Core
             }
             return null;
         }
-        public static Products UpdateProductPrice(Products product)
+        public Products UpdateProductPrice(Products product)
         {
             var prodDetail = products.Where(x => x.ProductId == product.ProductId);
             if (products.Count() > 0)
@@ -168,8 +170,6 @@ namespace ShoppingCartSystem.Core
             }
             return null;
         }
-
-
         public static Products UpdateProductQuantityAfterApplyOrder(Products product)
         {
             var prodDetail = products.Where(x => x.ProductId == product.ProductId);
@@ -177,15 +177,13 @@ namespace ShoppingCartSystem.Core
             {
                 prodDetail.Select(x =>
                 {
-                    x.Quantity = x.Quantity - product.Quantity;
+                    x.Quantity -= product.Quantity;
                     return x;
                 }).ToList();
                 return prodDetail.First<Products>();
             }
             return null;
         }
-
-
         public static Products UpdateProductsDetailAfterCancelProduct(Products product)
         {
             var prodDetail = products.Where(x => x.ProductId == product.ProductId);
@@ -193,15 +191,16 @@ namespace ShoppingCartSystem.Core
             {
                 prodDetail.Select(x =>
                 {
-                    x.Quantity = x.Quantity + product.Quantity;
+                    x.Quantity += product.Quantity;
                     return x;
                 }).ToList();
                 return prodDetail.First<Products>();
             }
             return null;
         }
+        #endregion
 
-
+        #region Get Product Information
         public static int GetProductQuantity(int productId)
         {
             var productAvailableQuantity = products.Where(x => x.ProductId == productId).Select(x => x.Quantity).First();
@@ -225,5 +224,6 @@ namespace ShoppingCartSystem.Core
             var productDescription = products.Where(x => x.ProductId == productId).Select(x => x.Description).First();
             return productDescription;
         }
+        #endregion
     }
 }

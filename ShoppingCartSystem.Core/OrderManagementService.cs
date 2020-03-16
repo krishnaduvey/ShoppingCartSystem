@@ -9,13 +9,11 @@ namespace ShoppingCartSystem.Core
 {
     public class OrderManagementService : IOrderManagement
     {
-        public static List<Cart> cartProduct = new List<Cart>();
-        public static List<OrderDetail> order = new List<OrderDetail>();
+        private static readonly List<Cart> cartProduct = new List<Cart>();
+        private static readonly List<OrderDetail> order = new List<OrderDetail>();
         public static decimal totalAmount = 0;
         private static int orderId = 1;
 
-
-        
 
         #region View Products in Cart
         /// <summary>
@@ -48,7 +46,7 @@ namespace ShoppingCartSystem.Core
         /// <returns>return boolean value for this particular event.</returns>
         public bool AddProductToCart(Products product, int userId)
         {
-            bool isProductAvailable = false;
+            bool isProductAvailable;
             isProductAvailable = product.Quantity <= ProductManagementService.GetProductQuantity(product.ProductId);
             if (isProductAvailable)
             {
@@ -98,17 +96,12 @@ namespace ShoppingCartSystem.Core
         }
         #endregion
 
-        public static bool isProductInCart(int productId, int userId) {
-           bool isProductInCart= cartProduct.Any(x => (x.Product.ProductId == productId) && (x.UserId == userId));            
-            return isProductInCart;
-        }
-
-        #region User can Get Order detaill using orderId
+        #region User can Get Order detaill using orderId OR orderId
         /// <summary>
         /// User can check particular order
         /// </summary>
-        /// <param name="orderId"></param>
-        /// <param name="userId"></param>
+        /// <param name="orderId">order id as input parameter.</param>
+        /// <param name="userId">user id to identify order related to which order.</param>
         /// <returns> returns the object of OrderDetails type.</returns>
         public OrderDetail GetOrderDetailsOfUser(int orderId, int userId)
         {
@@ -118,6 +111,12 @@ namespace ShoppingCartSystem.Core
 
             return orderInfo.First();
         }
+
+        /// <summary>
+        /// List of orders 
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <returns></returns>
         public List<OrderDetail> GetOrderDetailsOfUser(int userId)
         {
             var orderInfo = from ord in order
@@ -150,11 +149,11 @@ namespace ShoppingCartSystem.Core
         /// <returns>return the user id</returns>
         public bool ApplyOrder(int userId)
         {
-            int newOrderId = -1;
+            int newOrderId;
             var productsInCart = GetProductListFromCart(userId);
             if (productsInCart != null)
             {
-                var isProductInStock = isAllCartProductInStock(userId);
+                var isProductInStock = IsAllCartProductInStock(userId);
                 var outOfStock = GetOutOfStockProducts(userId);
                 if (isProductInStock)
                 {
@@ -188,7 +187,7 @@ namespace ShoppingCartSystem.Core
             }
         }
 
-        private bool isAllCartProductInStock(int userId)
+        private bool IsAllCartProductInStock(int userId)
         {
             var productsInCart = GetProductListFromCart(userId);
             var productQuant = productsInCart.All(x => x.Product.Quantity <= ProductManagementService.GetProductQuantity(x.Product.ProductId));
@@ -205,8 +204,6 @@ namespace ShoppingCartSystem.Core
                    ).ToList();
             return outOfStock;
         }
-
-
         private static int CreateOrder(Products product, int userId)
         {
             var newOrder = new OrderDetail()
@@ -248,7 +245,7 @@ namespace ShoppingCartSystem.Core
         }
         #endregion
 
-        
+        #region Display All Orders
         /// <summary>
         /// View all orders
         /// </summary>
@@ -289,7 +286,7 @@ namespace ShoppingCartSystem.Core
             return ordersWatchByNonAdmin.ToList();
         }
 
-
+        #endregion
 
         #region Get order status via orderId
         /// <summary>
@@ -330,23 +327,6 @@ namespace ShoppingCartSystem.Core
         }
         #endregion
 
-
-
-        #region Add product to cart util function just to add product without making object of product model
-        private void AddProductToCart(int productId, int quantity, int userId)
-        {
-            Products product = new Products()
-            {
-                ProductId = productId,
-                Quantity = quantity,
-                Price = ProductManagementService.GetProductPrice(productId)
-            };
-            AddProductToCart(product, userId);
-        }
-
-       
-        #endregion
-
         #region Get Product List from Cart (util)
         private static List<Cart> GetProductListFromCart(int userId)
         {
@@ -373,7 +353,7 @@ namespace ShoppingCartSystem.Core
         #endregion
 
         #region Check Cart is empty or not 
-        public static bool isProductExistsInUserCart(int userId)
+        public static bool IsProductExistsInUserCart(int userId)
         {
             var products = cartProduct.FindAll(x => x.UserId == userId);
             if (products != null && (products.Count > 0))
@@ -382,8 +362,21 @@ namespace ShoppingCartSystem.Core
         }
         #endregion
 
+        #region Check Existence of Product in Cart.
+        public static bool IsProductInCart(int productId, int userId)
+        {
+            bool isProductInCart = cartProduct.Any(x => (x.Product.ProductId == productId) && (x.UserId == userId));
+            return isProductInCart;
+        }
+        #endregion
 
-        // update cart prduct
+        #region Update Product in Cart
+        /// <summary>
+        /// Update product quanity which is in your cart.
+        /// </summary>
+        /// <param name="product">Products type object contains qunantity information.</param>
+        /// <param name="userId">user id to identify the users cart.</param>
+        /// <returns>Return updated information which is of Cart type.</returns>
         public Cart ModifyCartProduct(Products product,int userId) {
             var prodDetail = cartProduct.Where(x => (x.Product.ProductId == product.ProductId) && x.UserId==userId);
             if (cartProduct.Count() > 0)
@@ -397,5 +390,6 @@ namespace ShoppingCartSystem.Core
             }
             return null;
         }
+        #endregion
     }
 }

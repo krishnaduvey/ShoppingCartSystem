@@ -13,6 +13,6 @@ namespace ShoppingCartSystem.Abstraction
 
         bool DeleteUser(string username);
 
-
+        Users GetUserInfo(string username);
     }
 }

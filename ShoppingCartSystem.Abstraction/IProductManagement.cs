@@ -17,5 +17,18 @@ namespace ShoppingCartSystem.Abstraction
 
         List<Products> GetAllAvailableProducts();
 
+        /// <summary>
+        /// Update the product quantity information.
+        /// </summary>
+        /// <param name="product"></param>
+        /// <returns></returns>
+          Products UpdateProductQuantity(Products product);
+    
+          Products UpdateProductDescription(Products product);
+      
+          Products UpdateProductName(Products product);
+       
+          Products UpdateProductPrice(Products product);
+     
     }
 }

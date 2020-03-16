@@ -10,7 +10,11 @@ namespace ShoppingCartSystem.Core
 {
     public class UserManagementService : IUserManagement
     {
-        public static List<Users> users = new List<Users>()
+
+        /// <summary>
+        /// static object to hold users information.
+        /// </summary>
+        private static readonly List<Users> users = new List<Users>()
          {
              new Users()
              {
@@ -18,16 +22,21 @@ namespace ShoppingCartSystem.Core
                Name="Administrator",
                Password="admin",
                UserName="admin",
-               PhoneNumber= "8909910092",
+               Email="krishankant.duvey@soti.net",
+               PhoneNumber= "9716941237",
                UserRole=Role.Admin
              }
          };
 
+        /// <summary>
+        /// Login to application.
+        /// </summary>
+        /// <param name="username">Username of a user.</param>
+        /// <param name="password">Password of user</param>
+        /// <returns> Returns a LoginDetails type object.</returns>
         public LoginDetails Login(string username, string password)
         {
-            //bool isUser=IsUserExists(username);
             Users userDetails = GetUserInfo(username);
-
             if (userDetails == null)
                 return new LoginDetails()
                 {
@@ -54,11 +63,18 @@ namespace ShoppingCartSystem.Core
                     User = userDetails
                 };
             }
-
-            throw new NotImplementedException();
         }
 
 
+        public List<Users> GetUsers() {
+            return users;
+        }
+
+        /// <summary>
+        /// Register a user.
+        /// </summary>
+        /// <param name="user">User registration information in from of Users type object.</param>
+        /// <returns>Returns Users type object.</returns>
         public Users UserRegistration(Users user)
         {
             var newUser = new Users()
@@ -68,6 +84,7 @@ namespace ShoppingCartSystem.Core
                 Password = user.Password,
                 UserName = user.UserName,
                 PhoneNumber = user.PhoneNumber,
+                Email=user.Email,
                 UserRole = user.UserRole
             };
             try
@@ -82,36 +99,63 @@ namespace ShoppingCartSystem.Core
 
         }
 
-
+        /// <summary>
+        /// Create new userId for each new user.
+        /// </summary>
+        /// <returns>Returns userId of int type.</returns>
         public int InsertUserId()
         {
             var lastAddedUser = users.Last();
             return lastAddedUser.UserId + 1;
         }
 
-
+        /// <summary>
+        /// Get a user information on the basis of userId.
+        /// </summary>
+        /// <param name="userId">User registraction information in from of Users type object.</param>
+        /// <returns>Returns Users type object which contains user information.</returns>
         public static Users GetUserInfo(int userId)
         {
             return users.Where(x => x.UserId == userId).First(); 
         }
 
-        public static Users GetUserInfo(string username)
+        /// <summary>
+        /// Get UserInfo on the basis of username.
+        /// </summary>
+        /// <param name="username">input username as string type.</param>
+        /// <returns>returns a username as string type.</returns>
+        public Users GetUserInfo(string username)
         {
-
             return users.Where(x => x.UserName == username).FirstOrDefault(); ;
         }
+
+        /// <summary>
+        /// Check existence of user via user id.
+        /// </summary>
+        /// <param name="userId">userId as input parameter.</param>
+        /// <returns>Returns boolean value of existence of user.</returns>
         public static bool IsUserExists(int userId)
         {
-            return users.Select(x => x.UserId == userId).First();
+            var isUserExist = users.Any(x => x.UserId == userId);
+            return isUserExist;
         }
 
+        /// <summary>
+        /// Check existence of user via user username.
+        /// </summary>
+        /// <param name="username">username as input parameter.</param>
+        /// <returns>Returns boolean value of existence of user.</returns>
         public static bool IsUserExists(string username)
         {
-            return users.Select(x => x.UserName == username).First();
+            var isUserExist = users.Any(x => x.UserName == username);
+            return isUserExist;
         }
 
-
-
+        /// <summary>
+        /// Delete a existing user.
+        /// </summary>
+        /// <param name="username"> Input parameter should be a string type.</param>
+        /// <returns>Returns a boolean of check user deleted or not.</returns>
         public bool DeleteUser(string username)
         {
             try
@@ -136,29 +180,11 @@ namespace ShoppingCartSystem.Core
             }
         }
 
-
-        public static Dictionary<string, int> ActionOfAdminUser()
-        {
-            string[] actions = { "AddProduct", "View", "UpdateDetails", "Delete", "CheckAllOrders" };
-            Dictionary<string, int> adminActions = new Dictionary<string, int>();
-            for (int i = 1; i <= actions.Length; i++)
-            {
-                adminActions.Add(actions[i], i);
-            }
-
-            return adminActions;
-        }
-
-        public static void ActionOfGuestUser()
-        {
-            string[] actions = { "ViewProducts", "ViewProductsInCart", "AddToCart", "DeleteToCart", "ApplyOrder", "CheckOrderStatus" };
-            Dictionary<string, int> userActions = new Dictionary<string, int>();
-            for (int i = 1; i <= actions.Length; i++)
-            {
-                userActions.Add(actions[i], i);
-            }
-        }
-
+        /// <summary>
+        /// Validate phone number formate to allow indian standard phone numer.
+        /// </summary>
+        /// <param name="number"> string type phone number as input parameter.</param>
+        /// <returns>Returns boolean value of phone number check.</returns>
         public static bool IsPhoneNumber(string number)
         {
             if (number.Length == 10 && IsContainsDigitOnly(number))
@@ -166,6 +192,12 @@ namespace ShoppingCartSystem.Core
 
                 return Regex.Match(number, @"^\s*(?:\+?(\d{1,3}))?[- (]*(\d{3})[- )]*(\d{3})[- ]*(\d{4})(?: *[x/#]{1}(\d+))?\s*$").Success;
         }
+
+        /// <summary>
+        /// To check string contains digit only, its a util method
+        /// </summary>
+        /// <param name="num">String form of a number as input parameter.</param>
+        /// <returns>Returns bool value.</returns>
         private static bool IsContainsDigitOnly(string num) {
             foreach (char c in num)
             {
@@ -187,9 +219,26 @@ namespace ShoppingCartSystem.Core
             var name = nameCheck.Trim();
             if (name.Length <= 0)
                 return false;
-           
             return true;
-//            return Regex.Match(name, @"^{1,}$").Success;
         }
+
+        /// <summary>
+        /// Email format check.
+        /// </summary>
+        /// <param name="email"></param>
+        /// <returns></returns>
+        public static bool IsValidEmail(string email)
+        {
+            try
+            {
+                var addr = new System.Net.Mail.MailAddress(email);
+                return addr.Address == email;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
     }
 }
