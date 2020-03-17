@@ -934,6 +934,9 @@ namespace ShoppingCartSystem
             return CheckValidProductQuantity(productId);
         }
 
+        /// <summary>
+        /// List of actions
+        /// </summary>
         private static void ActionsToBePerform()
         {
             Console.WriteLine("----------------------------------------");
@@ -975,6 +978,9 @@ namespace ShoppingCartSystem
             }
         }
 
+        /// <summary>
+        /// Display all products
+        /// </summary>
         private static void ShowProducts()
         {
             new ProductManagementService().GetAllAvailableProducts();
@@ -1014,6 +1020,10 @@ namespace ShoppingCartSystem
 
         }
 
+        /// <summary>
+        /// To check user is new or existing one. 
+        /// </summary>
+        /// <returns></returns>
         private static bool DoYouHaveAnAccount()
         {
             try
@@ -1039,6 +1049,10 @@ namespace ShoppingCartSystem
             return DoYouHaveAnAccount();
         }
 
+        /// <summary>
+        /// Hold user untill they are showing interest in app
+        /// </summary>
+        /// <returns></returns>
         private static bool DoYouWantToContinue()
         {
             try
