@@ -115,6 +115,7 @@ namespace ShoppingCartSystem.Core
         /// <returns></returns>
         public Products UpdateProductQuantity(Products product)
         {
+            try { 
             var prodDetail = products.Where(x => x.ProductId == product.ProductId);
             if (products.Count() > 0)
             {
@@ -125,10 +126,15 @@ namespace ShoppingCartSystem.Core
                 }).ToList();
                 return prodDetail.First<Products>();
             }
+        }
+            catch (Exception) {
+                Console.WriteLine("Invalid entry");
+            }
             return null;
         }
         public Products UpdateProductDescription(Products product)
         {
+            try { 
             var prodDetail = products.Where(x => x.ProductId == product.ProductId);
             if (products.Count() > 0)
             {
@@ -139,25 +145,36 @@ namespace ShoppingCartSystem.Core
                 }).ToList();
                 return prodDetail.First<Products>();
             }
+        }
+            catch (Exception) {
+                Console.WriteLine("Invalid entry");
+            }
+
             return null;
 
         }
         public Products UpdateProductName(Products product)
         {
-            var prodDetail = products.Where(x => x.ProductId == product.ProductId);
-            if (products.Count() > 0)
-            {
-                prodDetail.Select(x =>
+            try {
+                var prodDetail = products.Where(x => x.ProductId == product.ProductId);
+                if (products.Count() > 0)
                 {
-                    x.Name = product.Name;
-                    return x;
-                }).ToList();
-                return prodDetail.First<Products>();
+                    prodDetail.Select(x =>
+                    {
+                        x.Name = product.Name;
+                        return x;
+                    }).ToList();
+                    return prodDetail.First<Products>();
+                }
+            }
+            catch (Exception) {
+                Console.WriteLine("Invalid entry");
             }
             return null;
         }
         public Products UpdateProductPrice(Products product)
         {
+            try { 
             var prodDetail = products.Where(x => x.ProductId == product.ProductId);
             if (products.Count() > 0)
             {
@@ -167,6 +184,10 @@ namespace ShoppingCartSystem.Core
                     return x;
                 }).ToList();
                 return prodDetail.First<Products>();
+            }
+        }
+            catch (Exception) {
+                Console.WriteLine("Invalid entry");
             }
             return null;
         }

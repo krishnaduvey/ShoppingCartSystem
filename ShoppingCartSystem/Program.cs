@@ -1,7 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using ShoppingCartSystem.Abstraction.Model;
 using ShoppingCartSystem.Core;
-using ShoppingCartSystem.Abstraction.Model;
+using System;
+using System.Collections.Generic;
 
 namespace ShoppingCartSystem
 {
@@ -44,6 +44,7 @@ namespace ShoppingCartSystem
                             isUserLoggedIn = LoginToApplication();
                             if (isUserLoggedIn)
                                 userType = loginInfo.User.UserRole;
+
                         }
                         else
                         {
@@ -259,7 +260,7 @@ namespace ShoppingCartSystem
                 case 9:
                     Console.WriteLine();
                     Console.WriteLine("\nThank you Mr. {0}", loginInfo.User.Name);
-                    return isUserLoggedIn = false;                    
+                    return isUserLoggedIn = false;
                 default:
                     Console.WriteLine();
                     if (value == 0)
@@ -304,7 +305,7 @@ namespace ShoppingCartSystem
             else
             {
                 Console.WriteLine(loginInfo.Message);
-                LoginToApplication();
+                //LoginToApplication();
             }
             return loginInfo.LoginStaus;
         }
@@ -412,7 +413,7 @@ namespace ShoppingCartSystem
         /// <returns>Returns product price of decimal type.</returns>
         private static decimal EnterProductPrice()
         {
-            decimal price;           
+            decimal price;
             price = ValidatePrice(out _);
             return price;
         }
@@ -506,8 +507,8 @@ namespace ShoppingCartSystem
                         ProductId = productId,
                         Quantity = EnterProductQuantity(),
                     };
-                    var updatedQuant =new ProductManagementService().UpdateProductQuantity(prodQuantityObj);
-                    if (updatedQuant.Quantity == prodQuantityObj.Quantity)
+                    var updatedQuant = new ProductManagementService().UpdateProductQuantity(prodQuantityObj);
+                    if (updatedQuant != null)
                     {
                         Console.WriteLine("Quantity updated successfully.");
                     }
@@ -520,8 +521,8 @@ namespace ShoppingCartSystem
                         ProductId = productId,
                         Name = EnterProductName(),
                     };
-                    var updatedName= new ProductManagementService().UpdateProductName(prodNameObj);
-                    if (updatedName.Name == prodNameObj.Name)
+                    var updatedName = new ProductManagementService().UpdateProductName(prodNameObj);
+                    if (updatedName != null)
                         Console.WriteLine("Name updated successfully.");
                     else
                         Console.WriteLine("Name  does not updated.");
@@ -532,8 +533,8 @@ namespace ShoppingCartSystem
                         ProductId = productId,
                         Price = EnterProductPrice(),
                     };
-                   var price = new ProductManagementService().UpdateProductPrice(prodPriceObj);
-                    if (price.Price == prodPriceObj.Price)
+                    var price = new ProductManagementService().UpdateProductPrice(prodPriceObj);
+                    if (price != null)
                     {
                         Console.WriteLine("Price updated successfully.");
                     }
@@ -546,8 +547,8 @@ namespace ShoppingCartSystem
                         ProductId = productId,
                         Description = EnterProductDescription(),
                     };
-                    var desc= new ProductManagementService().UpdateProductDescription(prodDescriptionObj);
-                    if (desc.Description == prodDescriptionObj.Description)
+                    var desc = new ProductManagementService().UpdateProductDescription(prodDescriptionObj);
+                    if (desc != null)
                     {
                         Console.WriteLine("Description updated successfully.");
                     }
@@ -616,7 +617,7 @@ namespace ShoppingCartSystem
                 Password = password,
                 UserName = username,
                 PhoneNumber = phonenumber,
-                Email=email,
+                Email = email,
                 UserRole = AddRoleToUser()
 
             };
@@ -723,7 +724,7 @@ namespace ShoppingCartSystem
             bool orderApplied = new OrderManagementService().ApplyOrder(loginInfo.User.UserId);
             if (orderApplied)
                 Console.WriteLine("Applied Successfully.");
-            
+
 
         }
 
@@ -757,13 +758,14 @@ namespace ShoppingCartSystem
                 int quantity = CheckValidProductQuantity(productId);
                 var prod = new Products()
                 {
-                    ProductId=productId,
-                    Quantity= quantity
+                    ProductId = productId,
+                    Quantity = quantity
                 };
                 new OrderManagementService().ModifyCartProduct(prod, loginInfo.User.UserId);
                 return true;
             }
-            else {
+            else
+            {
                 Console.WriteLine("No such product in Cart");
             }
             return false;
@@ -777,7 +779,8 @@ namespace ShoppingCartSystem
             try
             {
                 var listOfProduct = new OrderManagementService().ViewProductsInCart(loginInfo.User.UserId);
-                if (listOfProduct != null) {
+                if (listOfProduct != null)
+                {
                     Console.WriteLine("Items in your Cart : {0}", listOfProduct.Count);
                     PrintCartDetails(listOfProduct);
                 }
@@ -802,7 +805,7 @@ namespace ShoppingCartSystem
             {
                 Console.WriteLine();
                 Console.WriteLine("Please input valid number...\n");
-            } 
+            }
             else
                 return num;
             return EnterNumber();
@@ -951,14 +954,14 @@ namespace ShoppingCartSystem
                 Console.WriteLine("Check below list of actions that \"" + role.ToString() + "\" can perform.");
                 Console.WriteLine("Enter number to perform operation :");
                 Console.WriteLine("[0] To get list of actions.");
-                Console.WriteLine("[1] To display list of products.");//product
-                Console.WriteLine("[2] To add new product.");//product
-                Console.WriteLine("[3] To update product information.");//product
-                Console.WriteLine("[4] To delete product.");//product
-                Console.WriteLine("[5] To check all orders in which is applied by customer.");//Order
-                Console.WriteLine("[6] To Add new user.");//user
-                Console.WriteLine("[7] To delete a user.");//user
-                Console.WriteLine("[8] To get all users information.");//user
+                Console.WriteLine("[1] To display list of products.");
+                Console.WriteLine("[2] To add new product.");
+                Console.WriteLine("[3] To update product information.");
+                Console.WriteLine("[4] To delete product.");
+                Console.WriteLine("[5] To check all orders in which is applied by customer.");
+                Console.WriteLine("[6] To Add new user.");
+                Console.WriteLine("[7] To delete a user.");
+                Console.WriteLine("[8] To get all users information.");
                 Console.WriteLine("[9] To logout.");//user
             }
             else if (role.ToString() == "User")
@@ -1117,7 +1120,7 @@ namespace ShoppingCartSystem
         {
             Console.WriteLine("Enter 1 for Admin and 2 For User role");
 
-            
+
             int.TryParse(Console.ReadKey().KeyChar.ToString(), out int roleValue);
             Console.WriteLine();
 
@@ -1150,8 +1153,8 @@ namespace ShoppingCartSystem
                 Console.WriteLine("Enter Product Quantity :");
                 userInput = Console.ReadLine();
                 var isValidQuantity = int.TryParse(userInput, out input);
-                if(isValidQuantity)
-                return input;
+                if (isValidQuantity)
+                    return input;
                 else
                     Console.WriteLine("Please enter valid quantity.");
             }
@@ -1159,13 +1162,14 @@ namespace ShoppingCartSystem
             {
                 Console.WriteLine("Please enter valid quantity.");
             }
-            
+
             return ValidateQuantity(out input);
         }
 
         private static decimal ValidatePrice(out decimal input)
         {
-            try {
+            try
+            {
                 string userInput;
                 Console.WriteLine("Enter Product Price :");
                 userInput = Console.ReadLine();
@@ -1175,7 +1179,8 @@ namespace ShoppingCartSystem
                 else
                     Console.WriteLine("Please enter valid amount.");
             }
-            catch (Exception){
+            catch (Exception)
+            {
                 Console.WriteLine("Please enter valid amount.");
             }
             return ValidatePrice(out input);
@@ -1233,7 +1238,7 @@ namespace ShoppingCartSystem
         {
             foreach (var product in products)
             {
-                Console.WriteLine("Product Id : {0}\t|\tItem Name : {1}\t|\tQuantity : {2}\t|\tItem Price : {3}",product.ProductId, ProductManagementService.GetProductName(product.ProductId),
+                Console.WriteLine("Product Id : {0}\t|\tItem Name : {1}\t|\tQuantity : {2}\t|\tItem Price : {3}", product.ProductId, ProductManagementService.GetProductName(product.ProductId),
                     product.Quantity, OrderManagementService.GetTotalPriceAccordingToQuantity(ProductManagementService.GetProductPrice(product.ProductId), product.Quantity));
                 OrderManagementService.totalAmount += OrderManagementService.GetTotalPriceAccordingToQuantity(ProductManagementService.GetProductPrice(product.ProductId), product.Quantity);
             }

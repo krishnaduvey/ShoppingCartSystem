@@ -60,7 +60,7 @@ namespace ShoppingCartSystem.Abstraction
         /// <param name="product">New desciption in form of products type object.</param>
         /// <returns>Returns updated information.</returns>
         Products UpdateProductName(Products product);
-
+        
         /// <summary>
         /// Update product price
         /// </summary>
