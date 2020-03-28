@@ -168,14 +168,8 @@ namespace ShoppingCartSystem.Core
                 var result = users.Remove(users.Single(x => x.UserName == username));
                 return result;
             }
-            catch (ArgumentNullException argumentNull)
-            {
-                Console.WriteLine(argumentNull);
-                return false;
-            }
-            catch (InvalidOperationException invalidOperation)
-            {
-                Console.WriteLine(invalidOperation);
+            catch (Exception) {
+           //     Console.WriteLine("Please try with valid username");
                 return false;
             }
         }
