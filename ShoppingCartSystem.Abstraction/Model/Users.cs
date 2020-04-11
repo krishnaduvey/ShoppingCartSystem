@@ -1,4 +1,6 @@
 ﻿
+using System.ComponentModel.DataAnnotations;
+
 namespace ShoppingCartSystem.Abstraction.Model
 {
 
@@ -14,6 +16,7 @@ namespace ShoppingCartSystem.Abstraction.Model
     /// </summary>
     public class Users
     {
+        [Key]
         public int UserId { get; set; }
 
         public string Name { get; set; }

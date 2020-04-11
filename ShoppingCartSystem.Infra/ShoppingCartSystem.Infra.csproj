@@ -5,19 +5,18 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{4B749C0B-9EEF-4118-88C9-5D4958A145B0}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <RootNamespace>ShoppingCartSystem</RootNamespace>
-    <AssemblyName>ShoppingCartSystem</AssemblyName>
+    <ProjectGuid>{9203EE94-EF6B-41F1-BED2-A456B439CA78}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ShoppingCartSystem.Infra</RootNamespace>
+    <AssemblyName>ShoppingCartSystem.Infra</AssemblyName>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -27,7 +26,6 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
@@ -45,6 +43,8 @@
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data.Entity" />
+    <Reference Include="System.Data.Linq" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -53,26 +53,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
+    <Compile Include="Class1.cs" />
+    <Compile Include="DatabaseConfig.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
-    <None Include="packages.config" />
+    <Compile Include="ShoppingCartDbInitializer.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ShoppingCartSystem.Abstraction\ShoppingCartSystem.Abstraction.csproj">
       <Project>{0a74372b-c016-40bc-88c5-b430d59a17ad}</Project>
       <Name>ShoppingCartSystem.Abstraction</Name>
     </ProjectReference>
-    <ProjectReference Include="..\ShoppingCartSystem.Core\ShoppingCartSystem.Core.csproj">
-      <Project>{4e0929cb-e735-402c-a30c-d80e0c2112fa}</Project>
-      <Name>ShoppingCartSystem.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\ShoppingCartSystem.Infra\ShoppingCartSystem.Infra.csproj">
-      <Project>{9203EE94-EF6B-41F1-BED2-A456B439CA78}</Project>
-      <Name>ShoppingCartSystem.Infra</Name>
-    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

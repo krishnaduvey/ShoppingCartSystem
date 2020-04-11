@@ -1,5 +1,6 @@
 ﻿using ShoppingCartSystem.Abstraction.Model;
 using ShoppingCartSystem.Core;
+using ShoppingCartSystem.Infra;
 using System;
 using System.Collections.Generic;
 
@@ -11,6 +12,16 @@ namespace ShoppingCartSystem
         private static LoginDetails loginInfo;
         private static bool isUserLoggedIn = false;
         private static Role? userType;
+        private static DatabaseConfig dbObject = new DatabaseConfig();
+        /// <summary>
+        ///     The perform database operations.
+        /// </summary>
+
+
+        public static void PerformDatabaseOperations()
+        {
+                dbObject.Database.CreateIfNotExists();           
+        }
 
         /// <summary>
         /// Full control of application
@@ -18,6 +29,10 @@ namespace ShoppingCartSystem
         /// <param name="args">No need of args for this app</param>
         public static void Main()
         {
+            PerformDatabaseOperations();
+            Console.Write("Person saved !");
+            Console.ReadLine();
+
         Start:
             Console.WriteLine("-----------------------------------------------------------------------");
             Console.WriteLine("|||||||\t\t\t" + appTitle + "\t\t\t|||||||");
@@ -610,7 +625,6 @@ namespace ShoppingCartSystem
             string phonenumber = EnterPhoneNumber();
             string password = EnterPassword();
             string email = EnterEmail();
-
             var newUser = new Users()
             {
                 Name = name,

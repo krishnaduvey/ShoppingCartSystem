@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace ShoppingCartSystem.Abstraction.Model
+namespace ShoppingCartSystem.Infra
 {
-    public class Orders
+    public class Class1
     {
-        // product id, userId, productQuantity, users
-      
     }
 }
